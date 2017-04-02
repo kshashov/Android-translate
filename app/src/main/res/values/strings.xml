@@ -1,0 +1,12 @@
+<resources>
+    <!-- using in code -->
+    <string name="lang_code">en</string>
+
+    <!-- text -->
+    <string name="app_name">TranslateApp</string>
+    <string name="no_data_available">No data available</string>
+    <string name="hitInput">Type your text here</string>
+    <string name="translate">Translate</string>
+    <string name="history">History</string>
+    <string name="reload">Reload</string>
+</resources>

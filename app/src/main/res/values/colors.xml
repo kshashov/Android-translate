@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android -->
+    <color name="colorPrimary">#00897b</color>
+    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorAccent">#ffc107</color>
+
+    <!-- Base  Colors -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="gray">#FF999999</color>
+
+    <!-- App Colors -->
+    <color name="itemSelected">#4DB6AC</color>
+    <color name="textInput">@color/black</color>
+    <color name="textTranslated">@color/black</color>
+    <color name="textTranslatedLoading">@color/gray</color>
+    <color name="bgLanguagePanel">@color/gray</color>
+    <color name="bgBottomMenu">@color/gray</color>
+</resources>
