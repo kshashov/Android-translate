@@ -7,9 +7,6 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 public interface MVP {
 
     interface Model {

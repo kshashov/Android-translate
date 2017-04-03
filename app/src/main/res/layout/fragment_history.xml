@@ -18,10 +18,17 @@
         android:text="@string/no_data_available"
         android:layout_height="match_parent"/>
 
+    <android.support.v7.widget.SearchView
+        android:id="@+id/sv_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.SearchView>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_exchange_rates"
+        android:id="@+id/rv_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/sv_history"/>
 
 </RelativeLayout>

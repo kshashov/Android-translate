@@ -7,9 +7,6 @@ import shashov.translate.realm.Language;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by envoy on 23.03.2017.
- */
 public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
     private List<Language> langs = new ArrayList<>();
 

@@ -6,9 +6,6 @@ import shashov.translate.internals.mvp.MVP;
 
 import java.util.Map;
 
-/**
- * Created by envoy on 24.03.2017.
- */
 public class PresenterCache {
     /**
      * Map that contains the cached presenters.

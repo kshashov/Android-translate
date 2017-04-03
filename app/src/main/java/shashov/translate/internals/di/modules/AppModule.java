@@ -8,9 +8,6 @@ import shashov.translate.internals.mvp.presenters.PresenterCache;
 
 import javax.inject.Singleton;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 @Module
 public class AppModule {
 

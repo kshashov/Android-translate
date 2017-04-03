@@ -1,8 +1,5 @@
 package shashov.translate.realm;
 
-/**
- * Created by envoy on 23.03.2017.
- */
 public class Language {
     private String code;
     private String title;

@@ -48,20 +48,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bnv.setOnNavigationItemSelectedListener(this);
 
         if (fm.findFragmentById(R.id.container_fragment) == null) {
-            openFragment(null);
+            openFragment(getDefaultFragment());
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        String tag = "";
         BaseFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_translate:
-                fragment = TranslateFragment.newInstance(null);
+                fragment = findFragmentByTag(TranslateFragment.TAG);
+                if (fragment == null) {
+                    fragment = TranslateFragment.newInstance(null);
+
+                }
+                bnv.getMenu().getItem(0).setChecked(true);
                 break;
 
             case R.id.action_history:
-                fragment = new HistoryFragment();
+                fragment = findFragmentByTag(HistoryFragment.TAG);
+                if (fragment == null) {
+                    fragment = new HistoryFragment();
+                }
+                bnv.getMenu().getItem(1).setChecked(true);
                 break;
         }
 
@@ -70,19 +80,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void openFragment(BaseFragment fragment) {
-        if (fragment == null) {
-            fragment = getDefaultFragment();
-        }
-
-        final FragmentTransaction transaction = fm.beginTransaction();
         String tag = "";
         if (fragment instanceof TranslateFragment) {
             tag = TranslateFragment.TAG;
-            bnv.getMenu().getItem(0).setChecked(true);
         } else if (fragment instanceof HistoryFragment) {
             tag = HistoryFragment.TAG;
-            bnv.getMenu().getItem(1).setChecked(true);
         }
+        final FragmentTransaction transaction = fm.beginTransaction();
 
         if (fm.findFragmentById(R.id.container_fragment) != null) {
             transaction.replace(R.id.container_fragment, fragment, tag);
@@ -98,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (fm.findFragmentById(R.id.container_fragment) instanceof TranslateFragment) {
             finish();
         }
-        if (fm.findFragmentByTag(TranslateFragment.TAG) != null) {
-            openFragment((BaseFragment) fm.findFragmentByTag(TranslateFragment.TAG));
+
+        if (findFragmentByTag(TranslateFragment.TAG) != null) {
+            openFragment(findFragmentByTag(TranslateFragment.TAG));
         }
     }
 
@@ -116,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onPause() {
         super.onPause();
         mainBusSubscriber.unsubscribe();
+    }
+
+    private BaseFragment findFragmentByTag(String tag) {
+        if (fm.findFragmentByTag(tag) != null) {
+            return (BaseFragment) fm.findFragmentByTag(tag);
+        }
+        return null;
     }
 
     private BaseFragment getDefaultFragment() {

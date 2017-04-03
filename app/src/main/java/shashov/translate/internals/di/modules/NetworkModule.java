@@ -11,9 +11,6 @@ import shashov.translate.support.NetworkManager;
 
 import javax.inject.Singleton;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 @Module
 public class NetworkModule {
 

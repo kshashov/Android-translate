@@ -5,9 +5,6 @@ import shashov.translate.realm.Language;
 
 import java.util.List;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 public interface TranslateView extends MVP.View {
 
     void populateList(List<Language> data);

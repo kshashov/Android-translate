@@ -16,9 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by envoy on 23.03.2017.
- */
 public class LanguageModel implements MVP.Model {
     private Subscription observable;
 

@@ -4,7 +4,6 @@ package shashov.translate.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,13 +25,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TranslateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TranslateFragment extends BaseFragment<TranslatePresenter> implements TranslateView {
-    // TODO: Rename parameter arguments, choose names that match
     public static final String TAG = "TranslateFragment";
 
     @BindView(R.id.pb)
@@ -81,14 +74,6 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param translate Parameter 1.
-     * @return A new instance of fragment TranslateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static TranslateFragment newInstance(Translate translate) {
         TranslateFragment fragment = new TranslateFragment();
         Bundle args = new Bundle();

@@ -1,5 +1,8 @@
 package shashov.translate.adapters;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,21 +10,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Case;
+import io.realm.OrderedRealmCollection;
+import io.realm.Sort;
 import shashov.translate.R;
 import shashov.translate.realm.Translate;
+import xyz.projectplay.realmsearchadapter.RealmSearchAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by Aksiom on 6/30/2016.
- */
-public class HistoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HistorySearchAdapter extends RealmSearchAdapter {
     private HistoryListener historyListener;
-    private List<Translate> translates = new ArrayList<>();
+
+    public HistorySearchAdapter(@NonNull Context context, @Nullable OrderedRealmCollection data, HistoryListener historyListener) {
+        super(context, data, "input", true, Case.INSENSITIVE, Sort.DESCENDING, "time", null);
+        this.historyListener = historyListener;
+    }
 
     public class HistoryViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.tv_lang_code)
         public TextView tvLangsCode;
         @BindView(R.id.tv_output)
@@ -35,41 +39,30 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public HistoryRecyclerAdapter(List<Translate> translates, HistoryListener historyListener) {
-        this.historyListener = historyListener;
-        this.translates = translates;
-    }
-
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View vComplex = inflater.inflate(R.layout.history_item, parent, false);
-        viewHolder = new HistoryViewHolder(vComplex);
-
+        viewHolder = new HistorySearchAdapter.HistoryViewHolder(vComplex);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        HistoryViewHolder vhc = (HistoryViewHolder) holder;
-        vhc.tvLangsCode.setText(translates.get(position).getFromLang() + "-" + translates.get(position).getToLang());
+        HistorySearchAdapter.HistoryViewHolder vhc = (HistorySearchAdapter.HistoryViewHolder) holder;
+        final Translate translate = (Translate) getItem(position);
+        vhc.tvLangsCode.setText(translate.getFromLang() + "-" + translate.getToLang());
 
-        vhc.tvOutput.setText(translates.get(position).getOutput());
-        vhc.tvInput.setText(translates.get(position).getInput());
+        vhc.tvOutput.setText(translate.getOutput());
+        vhc.tvInput.setText(translate.getInput());
         vhc.tvLangsCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                historyListener.onClickItem(translates.get(position));
+                historyListener.onClickItem(translate);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return translates.size();
     }
 
     public interface HistoryListener {

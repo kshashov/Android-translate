@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-/**
- * Created by Aksiom on 6/30/2016.
- */
 public class NetworkManager {
 
     Context context;

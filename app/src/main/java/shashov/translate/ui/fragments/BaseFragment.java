@@ -3,6 +3,7 @@ package shashov.translate.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import shashov.translate.TranslateApp;
 import shashov.translate.internals.di.components.AppComponent;
 import shashov.translate.internals.mvp.MVP;
@@ -10,9 +11,6 @@ import shashov.translate.internals.mvp.presenters.PresenterCache;
 
 import javax.inject.Inject;
 
-/**
- * Created by envoy on 30.03.2017.
- */
 public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment implements MVP.View {
     @Inject
     PresenterCache presenterCache;
@@ -28,11 +26,15 @@ public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment imp
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         presenterCache.putPresenter(getClass().getName(), presenter); //TODO ?
         presenter.setView(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         getPresenter().onStart();
     }
 

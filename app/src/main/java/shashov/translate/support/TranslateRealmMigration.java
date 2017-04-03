@@ -4,9 +4,6 @@ import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
 
-/**
- * Created by envoy on 28.03.2017.
- */
 public class TranslateRealmMigration implements RealmMigration {
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

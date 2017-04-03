@@ -2,6 +2,7 @@ package shashov.translate.internals.mvp.models;
 
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -19,9 +20,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by envoy on 25.03.2017.
- */
 public class TranslateModel implements MVP.Model {
 
     private static final String TAG = TranslateModel.class.getSimpleName();
@@ -105,9 +103,9 @@ public class TranslateModel implements MVP.Model {
         return null;
     }
 
-    public void getAll(final OnDataLoaded<List<Translate>> onDataLoaded) {
-        RealmResults<Translate> result = realm.where(Translate.class).findAllSorted("time", Sort.DESCENDING);
-        onDataLoaded.onSuccess(realm.copyFromRealm(result));
+    public void getAll(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
+        OrderedRealmCollection<Translate> translates = realm.where(Translate.class).findAll();
+        onDataLoaded.onSuccess(translates);
 
     }
 

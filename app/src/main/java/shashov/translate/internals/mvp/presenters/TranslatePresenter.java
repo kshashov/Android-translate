@@ -14,9 +14,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Aksiom on 6/30/2016.
- */
 public class TranslatePresenter extends MVP.Presenter<TranslateView> {
     @Inject
     LanguageModel langModel;

@@ -18,9 +18,6 @@ import shashov.translate.ui.fragments.TranslateFragment;
 
 import javax.inject.Singleton;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 @Singleton
 @Component(modules = {AppModule.class, NetworkModule.class, DataModule.class, TranslateModule.class})
 public interface AppComponent {

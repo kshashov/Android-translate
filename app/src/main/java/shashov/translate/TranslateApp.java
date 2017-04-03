@@ -12,9 +12,6 @@ import shashov.translate.internals.di.modules.NetworkModule;
 import shashov.translate.internals.di.modules.TranslateModule;
 import shashov.translate.support.TranslateRealmMigration;
 
-/**
- * Created by Aksiom on 6/29/2016.
- */
 public class TranslateApp extends Application {
 
     private static AppComponent appComponent;
@@ -46,7 +43,8 @@ public class TranslateApp extends Application {
      * Initialise the realm configuration
      */
     private void initRealmConfiguration() {
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .schemaVersion(11)
                 .migration(new TranslateRealmMigration())
                 .build();

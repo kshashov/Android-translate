@@ -4,9 +4,6 @@ import io.realm.RealmObject;
 
 import java.io.Serializable;
 
-/**
- * Created by envoy on 25.03.2017.
- */
 public class Translate extends RealmObject implements Serializable {
     private String input;
     private String output;
