@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/pb"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:layout_height="wrap_content"/>
-
+        android:indeterminate="true"/>
 
     <TextView
         android:id="@+id/ll_no_data"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:text="@string/no_data_available"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:text="@string/no_data_available"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_menu_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all"/>
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites"/>
+    </android.support.design.widget.TabLayout>
 
     <android.support.v7.widget.SearchView
         android:id="@+id/sv_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false">
+        android:iconifiedByDefault="false"
+        android:layout_below="@+id/tl_menu_history">
 
     </android.support.v7.widget.SearchView>
 

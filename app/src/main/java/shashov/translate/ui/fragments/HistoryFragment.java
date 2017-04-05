@@ -23,10 +23,7 @@ import shashov.translate.internals.mvp.presenters.HistoryPresenter;
 import shashov.translate.internals.mvp.views.HistoryView;
 import shashov.translate.realm.Translate;
 
-/**
- * Created by envoy on 30.03.2017.
- */
-public class HistoryFragment extends BaseFragment<HistoryPresenter> implements HistoryView, HistorySearchAdapter.HistoryListener {
+public class HistoryFragment extends BaseFragment<HistoryPresenter> implements HistoryView, HistorySearchAdapter.HistoryListener, SearchView.OnQueryTextListener {
     public static final String TAG = "HistoryFragment";
     private static final String SV_TEXT = "svHistoryText";
     private static final String RV_STATE = "rvHistoryState";
@@ -70,7 +67,7 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     @Override
     public void onStart() {
         super.onStart();
-        getPresenter().loadData();
+        getPresenter().loadData(true);
     }
 
     @Override
@@ -141,28 +138,12 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         adapter = new HistorySearchAdapter(getContext(), data, this);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
-        svHistory.setQuery(svHistoryText, false);
-        svHistory.setIconified(false);
-        svHistory.clearFocus();
-        adapter.filter(svHistoryText);
-        adapter.notifyDataSetChanged();
+        svHistory.setOnQueryTextListener(this);
+        svHistory.setQuery(svHistoryText, true);
+        //adapter.filter(svHistoryText);
         if (rvState != null) {
             rvHistory.getLayoutManager().onRestoreInstanceState(rvState);
         }
-
-        svHistory.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                adapter.filter(query);
-                svHistory.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
     }
 
     @Override
@@ -199,5 +180,18 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         }
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        adapter.filter(query);
+        svHistory.setIconified(false);
+        svHistory.clearFocus();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapter.filter(newText);
+        return false;
+    }
 
 }

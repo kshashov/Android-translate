@@ -9,4 +9,6 @@
     <string name="translate">Translate</string>
     <string name="history">History</string>
     <string name="reload">Reload</string>
+    <string name="all">All</string>
+    <string name="favorites">Favorites</string>
 </resources>

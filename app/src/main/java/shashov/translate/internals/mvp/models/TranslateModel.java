@@ -106,7 +106,6 @@ public class TranslateModel implements MVP.Model {
     public void getAll(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
         OrderedRealmCollection<Translate> translates = realm.where(Translate.class).findAll();
         onDataLoaded.onSuccess(translates);
-
     }
 
     public class TranslateResponse {
