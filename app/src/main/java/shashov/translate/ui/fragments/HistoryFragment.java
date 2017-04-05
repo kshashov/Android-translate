@@ -57,11 +57,20 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        if (savedInstanceState != null) {
+            if ((savedInstanceState.containsKey(RV_STATE))) {
+                rvState = savedInstanceState.getParcelable(RV_STATE);
+            }
+            if (savedInstanceState.containsKey(SV_TEXT)) {
+                svHistoryText = savedInstanceState.getString(SV_TEXT);
+            }
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        getPresenter().loadData();
     }
 
     @Override
@@ -80,6 +89,13 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        rvState = rvHistory.getLayoutManager().onSaveInstanceState();
+        svHistoryText = svHistory.getQuery().toString();
     }
 
     @Override
@@ -120,13 +136,20 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
             // already loaded
             return;
         }
+
+        //add loaded data and restore last state
         adapter = new HistorySearchAdapter(getContext(), data, this);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
+        svHistory.setQuery(svHistoryText, false);
+        svHistory.setIconified(false);
+        svHistory.clearFocus();
+        adapter.filter(svHistoryText);
+        adapter.notifyDataSetChanged();
         if (rvState != null) {
             rvHistory.getLayoutManager().onRestoreInstanceState(rvState);
-            rvState = null;
         }
+
         svHistory.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -140,8 +163,6 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
                 return false;
             }
         });
-
-        svHistory.setQuery(svHistoryText, true);
     }
 
     @Override
@@ -152,12 +173,12 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (rvHistory != null) {
-            outState.putParcelable(RV_STATE, rvHistory.getLayoutManager().onSaveInstanceState());
+        if (rvState != null) {
+            outState.putParcelable(RV_STATE, rvState);
         }
 
-        if (svHistory != null) {
-            outState.putString(SV_TEXT, svHistory.getQuery().toString());
+        if (svHistoryText != null) {
+            outState.putString(SV_TEXT, svHistoryText);
         }
     }
 
@@ -166,12 +187,17 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             if ((savedInstanceState.containsKey(RV_STATE))) {
-                rvState = savedInstanceState.getParcelable(RV_STATE);
+                if (rvState == null) {
+                    rvState = savedInstanceState.getParcelable(RV_STATE);
+                }
             }
             if (savedInstanceState.containsKey(SV_TEXT)) {
-                svHistoryText = savedInstanceState.getString(SV_TEXT);
+                if (svHistoryText == null) {
+                    svHistoryText = savedInstanceState.getString(SV_TEXT);
+                }
             }
         }
-        getPresenter().loadData();
     }
+
+
 }

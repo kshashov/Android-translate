@@ -22,19 +22,18 @@ public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment imp
         super.onCreate(savedInstanceState);
         setupComponent(TranslateApp.getAppComponent());
         restoreOrCreatePresenter();
-        getPresenter().onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenterCache.putPresenter(getClass().getName(), presenter); //TODO ?
-        presenter.setView(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        getPresenter().setView(this);
         getPresenter().onStart();
     }
 

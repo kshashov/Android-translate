@@ -1,7 +1,6 @@
 package shashov.translate.internals.mvp;
 
 import android.app.Activity;
-import android.os.Bundle;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -55,12 +54,7 @@ public interface MVP {
             return view.get();
         }
 
-        public abstract void onActivityCreated(Bundle savedInstanceState);
-
         public void onStart() {
-        }
-
-        public void onRestart() {
         }
 
         public void onStop(boolean changingConfigurations) {

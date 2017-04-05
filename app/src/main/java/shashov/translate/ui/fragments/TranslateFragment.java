@@ -3,6 +3,7 @@ package shashov.translate.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,7 +65,7 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     @BindView(R.id.img_clear)
     ImageView imgClear;
 
-    private static final String TRANSLATE = "translate";
+    public static final String TRANSLATE = "translate";
     private Translate translate;
     private Unbinder unbinder;
     private Timer timer = new Timer();
@@ -88,8 +89,8 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
         if (getArguments() != null) {
             if (getArguments().containsKey(TRANSLATE)) {
                 translate = (Translate) getArguments().getSerializable(TRANSLATE);
+                getArguments().remove(TRANSLATE);
             }
-            getArguments().clear();
         }
     }
 
@@ -126,14 +127,36 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     }
 
     @Override
-    public void onStop() {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            if ((savedInstanceState.containsKey(TRANSLATE))) {
+                if (translate == null) {
+                    translate = (Translate) savedInstanceState.getSerializable(TRANSLATE);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(TRANSLATE, translate);
+    }
+
+    @Override
+    public void onPause() {
         timer.cancel();
+        super.onPause();
+        translate = getCurrentState();
+    }
+
+    private Translate getCurrentState() {
         Translate translate = new Translate();
         translate.setInput(etInputText.getText().toString());
         translate.setToLang(((LanguageSpinnerAdapter) spOutputLang.getAdapter()).getLanguage(spOutputLang.getSelectedItemPosition()).getCode());
         translate.setFromLang(((LanguageSpinnerAdapter) spInputLang.getAdapter()).getLanguage(spInputLang.getSelectedItemPosition()).getCode());
-        getPresenter().saveCurrentTranslate(translate);
-        super.onStop();
+        return translate;
     }
 
     @Override
@@ -258,7 +281,7 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
                                 new TimerTask() {
                                     @Override
                                     public void run() {
-                                        if (fragment == null || (fragment.getActivity() == null)) {
+                                        if (fragment.getActivity() == null) { //TODO safe????
                                             return;
                                         }
                                         fragment.getActivity().runOnUiThread(new Runnable() {

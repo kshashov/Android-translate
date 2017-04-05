@@ -1,6 +1,5 @@
 package shashov.translate.internals.mvp.presenters;
 
-import android.os.Bundle;
 import shashov.translate.R;
 import shashov.translate.TranslateApp;
 import shashov.translate.internals.mvp.MVP;
@@ -22,7 +21,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
 
     private List<Language> langs = new ArrayList<>();
     private Translate lastTranslate; //last successful translate
-    private Translate currentTranslate; //last saved translate without output
+    //private Translate currentTranslate; //last saved translate without output
     private int posOfFromLang = 0;
     private int posOfToLang = 0;
     private boolean isLoading = false;
@@ -33,11 +32,6 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
 
     public void loadData(Translate translate) {
         getView().showLoading();
-
-        //try to open last request
-        if (translate == null) {
-            translate = currentTranslate;
-        }
 
         if (translate == null) {
             //try to open last translate record from data model (==realm)
@@ -54,7 +48,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         }
 
         if (!langs.isEmpty()) {
-            //for example: if activity recreate
+            //for example: if fragment recreate
             initView(translate);
         } else {
             //load langs list
@@ -87,6 +81,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
     }
 
     private void initView(Translate translate) {
+        //open translate in view
         if (translate != null) {
             //open saved translate
             posOfFromLang = getPositionOfLang(translate.getFromLang());
@@ -170,11 +165,6 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-    }
-
-    @Override
     public void onStop(boolean changingConfigurations) {
         super.onStop(changingConfigurations);
         if (!changingConfigurations) {
@@ -182,10 +172,6 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
             langModel.unsubscribe();
             isLoading = false;
         }
-    }
-
-    public void saveCurrentTranslate(Translate translate) {
-        currentTranslate = translate;
     }
 
     private void loadingTranslate(boolean isLoading, String output) {

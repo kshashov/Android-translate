@@ -1,6 +1,5 @@
 package shashov.translate.internals.mvp.presenters;
 
-import android.os.Bundle;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.TranslateApp;
 import shashov.translate.eventbus.RxEventBus;
@@ -54,11 +53,6 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
             getView().showContent();
             getView().populateList(data);
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
     }
 
     public void onClickTranslate(Translate translate) {

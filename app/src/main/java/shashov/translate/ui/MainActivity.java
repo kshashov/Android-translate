@@ -54,14 +54,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        String tag = "";
         BaseFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_translate:
                 fragment = findFragmentByTag(TranslateFragment.TAG);
                 if (fragment == null) {
                     fragment = TranslateFragment.newInstance(null);
-
                 }
                 bnv.getMenu().getItem(0).setChecked(true);
                 break;
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
 
         if (findFragmentByTag(TranslateFragment.TAG) != null) {
+            bnv.getMenu().getItem(0).setChecked(true);
             openFragment(findFragmentByTag(TranslateFragment.TAG));
         }
     }
@@ -154,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 } else {
                     ((TranslateFragment) translateFragment).setTranslate(((OpenTranslateEvent) o).getTranslate());
                 }
+                bnv.getMenu().getItem(0).setChecked(true);
                 openFragment((BaseFragment) translateFragment);
 
             }
