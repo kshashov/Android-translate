@@ -45,7 +45,7 @@ public class TranslateApp extends Application {
     private void initRealmConfiguration() {
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-                .schemaVersion(11)
+                .schemaVersion(12)
                 .migration(new TranslateRealmMigration())
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);

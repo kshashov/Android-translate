@@ -2,7 +2,7 @@ package shashov.translate.adapters;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
-import shashov.translate.realm.Language;
+import shashov.translate.dao.Language;
 
 import java.util.ArrayList;
 import java.util.List;

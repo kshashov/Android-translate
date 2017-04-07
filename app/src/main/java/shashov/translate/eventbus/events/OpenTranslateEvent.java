@@ -1,6 +1,6 @@
 package shashov.translate.eventbus.events;
 
-import shashov.translate.realm.Translate;
+import shashov.translate.dao.Translate;
 
 public class OpenTranslateEvent {
     private Translate translate;

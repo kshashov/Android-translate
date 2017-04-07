@@ -1,7 +1,7 @@
 package shashov.translate.internals.mvp.views;
 
+import shashov.translate.dao.Language;
 import shashov.translate.internals.mvp.MVP;
-import shashov.translate.realm.Language;
 
 import java.util.List;
 

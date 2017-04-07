@@ -1,4 +1,4 @@
-package shashov.translate.realm;
+package shashov.translate.dao;
 
 import io.realm.RealmObject;
 
@@ -10,12 +10,14 @@ public class Translate extends RealmObject implements Serializable {
     private String fromLang;
     private String toLang;
     private Long time;
+    private long favTime;
 
     public Translate() {
         input = "";
         output = "";
         fromLang = "";
         toLang = "";
+        favTime = 0;
     }
 
     public String getFromLang() {
@@ -56,5 +58,13 @@ public class Translate extends RealmObject implements Serializable {
 
     public void setTime(Long time) {
         this.time = time;
+    }
+
+    public long getFavTime() {
+        return favTime;
+    }
+
+    public void setFavTime(long favTime) {
+        this.favTime = favTime;
     }
 }

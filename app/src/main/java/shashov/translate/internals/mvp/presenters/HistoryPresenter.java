@@ -2,12 +2,12 @@ package shashov.translate.internals.mvp.presenters;
 
 import io.realm.OrderedRealmCollection;
 import shashov.translate.TranslateApp;
+import shashov.translate.dao.Translate;
 import shashov.translate.eventbus.RxEventBus;
 import shashov.translate.eventbus.events.OpenTranslateEvent;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.internals.mvp.views.HistoryView;
-import shashov.translate.realm.Translate;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
     }
 
     private void loadFavorites(MVP.Model.OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
-        translateModel.getAll(onDataLoaded); //TODO
+        translateModel.getFav(onDataLoaded);
     }
 
     private void showContent(OrderedRealmCollection<Translate> translates) {

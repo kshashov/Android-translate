@@ -19,7 +19,7 @@
         android:text="@string/no_data_available"/>
 
     <android.support.design.widget.TabLayout
-        android:id="@+id/tl_menu_history"
+        android:id="@+id/tl_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:layout_below="@+id/tl_menu_history">
+        android:layout_below="@+id/tl_history">
 
     </android.support.v7.widget.SearchView>
 

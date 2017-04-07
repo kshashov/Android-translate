@@ -1,4 +1,4 @@
-package shashov.translate.realm;
+package shashov.translate.dao;
 
 public class Language {
     private String code;

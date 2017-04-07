@@ -10,10 +10,11 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import shashov.translate.dao.Translate;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.networking.YandexAPI;
-import shashov.translate.realm.Translate;
 import shashov.translate.support.NetworkManager;
+import shashov.translate.support.TranslateRealmMigration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public class TranslateModel implements MVP.Model {
 
     public void translate(final Translate translate, final OnDataLoaded<Translate> onDataLoaded) {
         if (!networkManager.isConnected()) {
-            onDataLoaded.onFail("No cached data and not Internet");
+            onDataLoaded.onFail("No cached data and not Internet"); //TODO text from constant
         } else {
             observable = yandexAPI.translate(YandexAPI.API_CODE, translate.getFromLang() + "-" + translate.getToLang(), translate.getInput())
                     .subscribeOn(Schedulers.newThread())
@@ -60,6 +61,8 @@ public class TranslateModel implements MVP.Model {
                                        Translate data = translate;
                                        if (!translateResponse.getTextList().isEmpty()) {
                                            translate.setOutput(translateResponse.getTextList().get(0));
+                                       } else {
+                                           translate.setOutput("");
                                        }
 
                                        List<Translate> saved = new ArrayList();
@@ -80,11 +83,11 @@ public class TranslateModel implements MVP.Model {
 
     @Override
     public void cache(List<?> data, Date date) {
-        //TODO save to realm
         List<Translate> translates = new ArrayList<>((Collection<? extends Translate>) data);
         realm.beginTransaction();
         for (Translate translate : translates) {
             translate.setTime(date.getTime());
+            translate.setFavTime(0);
             realm.copyToRealm(translate);
         }
         realm.commitTransaction();
@@ -96,22 +99,34 @@ public class TranslateModel implements MVP.Model {
     }
 
     public Translate getLastTranslate() {
-        RealmResults<Translate> result = realm.where(Translate.class).findAllSorted("time", Sort.DESCENDING);
+        RealmResults<Translate> result = realm
+                .where(Translate.class)
+                .findAllSorted(TranslateRealmMigration.TranslateColumns.TIME, Sort.DESCENDING);
+
         if (result.size() > 0) {
-            return result.get(0);
+            return result.first();
         }
         return null;
     }
+
 
     public void getAll(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
         OrderedRealmCollection<Translate> translates = realm.where(Translate.class).findAll();
         onDataLoaded.onSuccess(translates);
     }
 
+    public void getFav(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
+        OrderedRealmCollection<Translate> translates = realm
+                .where(Translate.class)
+                .notEqualTo(TranslateRealmMigration.TranslateColumns.FAV_TIME, 0)
+                .findAll();
+        onDataLoaded.onSuccess(translates);
+    }
+
     public class TranslateResponse {
-        //TODO check code response
+
         @SerializedName("code")
-        String code;
+        String code; //TODO use code for print error message
         @SerializedName("text")
         List<String> textList;
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,16 +19,21 @@ import butterknife.Unbinder;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
 import shashov.translate.adapters.HistorySearchAdapter;
+import shashov.translate.dao.Translate;
 import shashov.translate.internals.di.components.AppComponent;
 import shashov.translate.internals.mvp.presenters.HistoryPresenter;
 import shashov.translate.internals.mvp.views.HistoryView;
-import shashov.translate.realm.Translate;
 
 public class HistoryFragment extends BaseFragment<HistoryPresenter> implements HistoryView, HistorySearchAdapter.HistoryListener, SearchView.OnQueryTextListener {
     public static final String TAG = "HistoryFragment";
     private static final String SV_TEXT = "svHistoryText";
     private static final String RV_STATE = "rvHistoryState";
-    private Unbinder unbinder;
+    private static final String IS_ALL = "isAll";
+    private static final int ALL_TAB = 0;
+    private static final int FAV_TAB = 1;
+
+    @BindView(R.id.tl_history)
+    TabLayout tlHistory;
 
     @BindView(R.id.pb)
     ProgressBar pb;
@@ -43,6 +49,8 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
 
     private HistorySearchAdapter adapter;
     private Parcelable rvState;
+    private Unbinder unbinder;
+    private boolean isAll = true;
     private String svHistoryText = "";
 
     public HistoryFragment() {
@@ -52,22 +60,20 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
         if (savedInstanceState != null) {
             if ((savedInstanceState.containsKey(RV_STATE))) {
                 rvState = savedInstanceState.getParcelable(RV_STATE);
             }
-            if (savedInstanceState.containsKey(SV_TEXT)) {
-                svHistoryText = savedInstanceState.getString(SV_TEXT);
-            }
+
+            svHistoryText = savedInstanceState.getString(SV_TEXT, svHistoryText);
+            isAll = savedInstanceState.getBoolean(IS_ALL, isAll);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getPresenter().loadData(true);
+        getPresenter().loadData(isAll);
     }
 
     @Override
@@ -89,6 +95,28 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        tlHistory.getTabAt(isAll ? ALL_TAB : FAV_TAB).select(); //TODO add const ALL_TAB = 0 FAV_TAB = 1
+        tlHistory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                svHistoryText = svHistory.getQuery().toString();
+                isAll = (tab.getPosition() == ALL_TAB);
+                getPresenter().loadData(isAll);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         rvState = rvHistory.getLayoutManager().onSaveInstanceState();
@@ -105,7 +133,9 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     public void showLoading() {
         pb.setVisibility(View.VISIBLE);
         tvNoData.setVisibility(View.INVISIBLE);
+        svHistory.setVisibility(View.INVISIBLE);
         rvHistory.setVisibility(View.INVISIBLE);
+        tlHistory.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -118,6 +148,8 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         pb.setVisibility(View.INVISIBLE);
         tvNoData.setVisibility(View.INVISIBLE);
         rvHistory.setVisibility(View.VISIBLE);
+        svHistory.setVisibility(View.VISIBLE);
+        tlHistory.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -125,17 +157,15 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         pb.setVisibility(View.INVISIBLE);
         tvNoData.setVisibility(View.VISIBLE);
         rvHistory.setVisibility(View.INVISIBLE);
+        svHistory.setVisibility(View.INVISIBLE);
+        tlHistory.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void populateList(OrderedRealmCollection<Translate> data) {
-        if (rvHistory.getAdapter() != null) {
-            // already loaded
-            return;
-        }
 
         //add loaded data and restore last state
-        adapter = new HistorySearchAdapter(getContext(), data, this);
+        adapter = new HistorySearchAdapter(getContext(), data, isAll, this);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
         svHistory.setOnQueryTextListener(this);
@@ -158,12 +188,11 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
             outState.putParcelable(RV_STATE, rvState);
         }
 
-        if (svHistoryText != null) {
-            outState.putString(SV_TEXT, svHistoryText);
-        }
+        outState.putString(SV_TEXT, svHistoryText);
+        outState.putBoolean(IS_ALL, isAll);
     }
-
-    @Override
+/*
+    @Override TODO test and clear this shit
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
@@ -172,13 +201,9 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
                     rvState = savedInstanceState.getParcelable(RV_STATE);
                 }
             }
-            if (savedInstanceState.containsKey(SV_TEXT)) {
-                if (svHistoryText == null) {
-                    svHistoryText = savedInstanceState.getString(SV_TEXT);
-                }
-            }
+                svHistoryText = savedInstanceState.getString(SV_TEXT,svHistoryText);
         }
-    }
+    }*/
 
     @Override
     public boolean onQueryTextSubmit(String query) {

@@ -14,14 +14,21 @@ import io.realm.Case;
 import io.realm.OrderedRealmCollection;
 import io.realm.Sort;
 import shashov.translate.R;
-import shashov.translate.realm.Translate;
+import shashov.translate.dao.Translate;
+import shashov.translate.support.TranslateRealmMigration;
 import xyz.projectplay.realmsearchadapter.RealmSearchAdapter;
 
 public class HistorySearchAdapter extends RealmSearchAdapter {
     private HistoryListener historyListener;
 
-    public HistorySearchAdapter(@NonNull Context context, @Nullable OrderedRealmCollection data, HistoryListener historyListener) {
-        super(context, data, "input", true, Case.INSENSITIVE, Sort.DESCENDING, "time", null);
+    public HistorySearchAdapter(@NonNull Context context, @Nullable OrderedRealmCollection data, boolean isAll, HistoryListener historyListener) {
+        super(context,
+                data,
+                TranslateRealmMigration.TranslateColumns.INPUT,
+                true,
+                Case.INSENSITIVE, Sort.DESCENDING,
+                isAll ? TranslateRealmMigration.TranslateColumns.TIME : TranslateRealmMigration.TranslateColumns.FAV_TIME,
+                null);
         this.historyListener = historyListener;
     }
 
@@ -33,6 +40,7 @@ public class HistorySearchAdapter extends RealmSearchAdapter {
         @BindView(R.id.tv_input)
         public TextView tvInput;
 
+        //TODO add fav
         public HistoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

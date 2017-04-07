@@ -6,9 +6,9 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import shashov.translate.dao.Language;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.networking.YandexAPI;
-import shashov.translate.realm.Language;
 import shashov.translate.support.NetworkManager;
 
 import java.util.ArrayList;

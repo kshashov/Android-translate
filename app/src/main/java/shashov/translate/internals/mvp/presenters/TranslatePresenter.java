@@ -2,12 +2,12 @@ package shashov.translate.internals.mvp.presenters;
 
 import shashov.translate.R;
 import shashov.translate.TranslateApp;
+import shashov.translate.dao.Language;
+import shashov.translate.dao.Translate;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.internals.mvp.views.TranslateView;
-import shashov.translate.realm.Language;
-import shashov.translate.realm.Translate;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

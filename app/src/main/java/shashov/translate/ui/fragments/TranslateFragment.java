@@ -16,11 +16,11 @@ import butterknife.*;
 import com.lb.auto_fit_textview.AutoResizeTextView;
 import shashov.translate.R;
 import shashov.translate.adapters.LanguageSpinnerAdapter;
+import shashov.translate.dao.Language;
+import shashov.translate.dao.Translate;
 import shashov.translate.internals.di.components.AppComponent;
 import shashov.translate.internals.mvp.presenters.TranslatePresenter;
 import shashov.translate.internals.mvp.views.TranslateView;
-import shashov.translate.realm.Language;
-import shashov.translate.realm.Translate;
 
 import java.util.List;
 import java.util.Timer;
@@ -281,7 +281,7 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
                                 new TimerTask() {
                                     @Override
                                     public void run() {
-                                        if (fragment.getActivity() == null) { //TODO safe????
+                                        if (fragment.getActivity() == null) { //TODO it safe????
                                             return;
                                         }
                                         fragment.getActivity().runOnUiThread(new Runnable() {
