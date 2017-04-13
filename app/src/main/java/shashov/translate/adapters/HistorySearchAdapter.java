@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import io.realm.Case;
 import io.realm.OrderedRealmCollection;
-import io.realm.Sort;
 import shashov.translate.R;
 import shashov.translate.dao.Translate;
 import shashov.translate.support.TranslateRealmMigration;
@@ -21,13 +21,14 @@ import xyz.projectplay.realmsearchadapter.RealmSearchAdapter;
 public class HistorySearchAdapter extends RealmSearchAdapter {
     private HistoryListener historyListener;
 
-    public HistorySearchAdapter(@NonNull Context context, @Nullable OrderedRealmCollection data, boolean isAll, HistoryListener historyListener) {
+    public HistorySearchAdapter(@NonNull Context context, @Nullable OrderedRealmCollection data, HistoryListener historyListener) {
         super(context,
                 data,
                 TranslateRealmMigration.TranslateColumns.INPUT,
                 true,
-                Case.INSENSITIVE, Sort.DESCENDING,
-                isAll ? TranslateRealmMigration.TranslateColumns.TIME : TranslateRealmMigration.TranslateColumns.FAV_TIME,
+                Case.INSENSITIVE,
+                null,
+                null,
                 null);
         this.historyListener = historyListener;
     }
@@ -39,8 +40,9 @@ public class HistorySearchAdapter extends RealmSearchAdapter {
         public TextView tvOutput;
         @BindView(R.id.tv_input)
         public TextView tvInput;
+        @BindView(R.id.translate_favorite)
+        public MaterialFavoriteButton mfbFav;
 
-        //TODO add fav
         public HistoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -49,11 +51,24 @@ public class HistorySearchAdapter extends RealmSearchAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder;
+        final HistoryViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View vComplex = inflater.inflate(R.layout.history_item, parent, false);
         viewHolder = new HistorySearchAdapter.HistoryViewHolder(vComplex);
+
+        viewHolder.mfbFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                historyListener.onChangeFavorite((Translate) getItem(viewHolder.getLayoutPosition()));
+            }
+        });
+        viewHolder.tvLangsCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                historyListener.onClickItem((Translate) getItem(viewHolder.getLayoutPosition()));
+            }
+        });
         return viewHolder;
     }
 
@@ -62,18 +77,14 @@ public class HistorySearchAdapter extends RealmSearchAdapter {
         HistorySearchAdapter.HistoryViewHolder vhc = (HistorySearchAdapter.HistoryViewHolder) holder;
         final Translate translate = (Translate) getItem(position);
         vhc.tvLangsCode.setText(translate.getFromLang() + "-" + translate.getToLang());
-
         vhc.tvOutput.setText(translate.getOutput());
         vhc.tvInput.setText(translate.getInput());
-        vhc.tvLangsCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                historyListener.onClickItem(translate);
-            }
-        });
+        vhc.mfbFav.setFavorite(translate.isFavorite(), false);
     }
 
     public interface HistoryListener {
         void onClickItem(Translate translate);
+
+        void onChangeFavorite(Translate translate);
     }
 }

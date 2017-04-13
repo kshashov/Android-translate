@@ -163,9 +163,8 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
 
     @Override
     public void populateList(OrderedRealmCollection<Translate> data) {
-
         //add loaded data and restore last state
-        adapter = new HistorySearchAdapter(getContext(), data, isAll, this);
+        adapter = new HistorySearchAdapter(getContext(), data, this);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
         svHistory.setOnQueryTextListener(this);
@@ -180,6 +179,12 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     public void onClickItem(Translate translate) {
         getPresenter().onClickTranslate(translate);
     }
+
+    @Override
+    public void onChangeFavorite(Translate translate) {
+        getPresenter().onChangeFavorite(translate);
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

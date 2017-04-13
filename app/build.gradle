@@ -36,6 +36,7 @@ dependencies {
     compile 'com.github.AndroidDeveloperLB:AutoFitTextView:4'
     compile 'com.github.thorbenprimke:realm-searchview:0.9.6'
     compile 'com.github.Reline:realm-searchadapter:1.0'
+    compile 'com.github.ivbaranov:materialfavoritebutton:0.1.2'
 
     // Network
     compile 'com.squareup.retrofit2:retrofit:2.1.0'

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.*;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.lb.auto_fit_textview.AutoResizeTextView;
 import shashov.translate.R;
 import shashov.translate.adapters.LanguageSpinnerAdapter;
@@ -28,6 +29,8 @@ import java.util.TimerTask;
 
 public class TranslateFragment extends BaseFragment<TranslatePresenter> implements TranslateView {
     public static final String TAG = "TranslateFragment";
+    private static final String TRANSLATE = "translate";
+    private final long SUBMIT_TEXT_DELAY = 500; // milliseconds
 
     @BindView(R.id.pb)
     ProgressBar pb;
@@ -65,11 +68,12 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     @BindView(R.id.img_clear)
     ImageView imgClear;
 
-    public static final String TRANSLATE = "translate";
+    @BindView(R.id.translate_favorite)
+    public MaterialFavoriteButton mfbFav;
+
     private Translate translate;
     private Unbinder unbinder;
     private Timer timer = new Timer();
-    private final long DELAY = 500; // milliseconds
 
     public TranslateFragment() {
         // Required empty public constructor
@@ -92,6 +96,20 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
                 getArguments().remove(TRANSLATE);
             }
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mfbFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getPresenter() != null) {
+                    getPresenter().changeFavorite();
+                    mfbFav.toggleFavorite();
+                }
+            }
+        });
     }
 
     @Override
@@ -186,7 +204,7 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     }
 
     @Override
-    public void populateList(List<Language> data) {
+    public void populateLangs(List<Language> data) {
         spInputLang.setAdapter(new LanguageSpinnerAdapter(getContext()));
         spOutputLang.setAdapter(new LanguageSpinnerAdapter(getContext()));
         ((LanguageSpinnerAdapter) spInputLang.getAdapter()).addItems(data);
@@ -213,12 +231,8 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
 
     @Override
     public void showLoadingTranslate(boolean isLoading) {
-        if (isLoading) {
-            tv_outputText.setTextColor(getResources().getColor(R.color.textTranslatedLoading));
-        } else {
-            tv_outputText.setTextColor(getResources().getColor(R.color.textTranslated));
-        }
-
+        tv_outputText.setTextColor(getResources().getColor(isLoading ? R.color.textTranslatedLoading : R.color.textTranslated));
+        mfbFav.setVisibility(isLoading ? View.INVISIBLE : View.VISIBLE);
         pbOutput.setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -234,19 +248,21 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     }
 
     @Override
-    public void showOutput(String output) {
-        tv_outputText.setText(output);
+    public void showOutput(Translate translate) {
+        tv_outputText.setText(translate.getOutput());
+        mfbFav.setFavorite(translate.isFavorite(), false);
+
+        if (translate.getOutput().isEmpty()) {
+            mfbFav.setVisibility(View.INVISIBLE);
+        } else {
+            mfbFav.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void showTranslateReload() {
         tv_outputText.setVisibility(View.GONE);
         llNoTranslate.setVisibility(View.VISIBLE);
-    }
-
-    void onTextChanged(CharSequence text) {
-        setClearButtonVisible(text.length() > 0);
-        sendToConvert(text.toString());
     }
 
     private void sendToConvert(String input) {
@@ -275,6 +291,8 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
 
                     @Override
                     public void afterTextChanged(final Editable s) {
+                        setClearButtonVisible(s.toString().length() > 0);
+
                         timer.cancel();
                         timer = new Timer();
                         timer.schedule(
@@ -287,12 +305,12 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
                                         fragment.getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                fragment.onTextChanged(s.toString());
+                                                fragment.sendToConvert(s.toString());
                                             }
                                         });
                                     }
                                 },
-                                DELAY
+                                SUBMIT_TEXT_DELAY
                         );
                     }
                 }

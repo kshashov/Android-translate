@@ -3,15 +3,10 @@ package shashov.translate.internals.mvp;
 import android.app.Activity;
 
 import java.lang.ref.WeakReference;
-import java.util.Date;
-import java.util.List;
 
 public interface MVP {
 
     interface Model {
-        void cache(List<?> data, Date date);
-
-        void clearCache();
 
         interface OnDataLoaded<D> {
             void onSuccess(D data);

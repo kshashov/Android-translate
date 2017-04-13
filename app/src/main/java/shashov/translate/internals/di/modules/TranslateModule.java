@@ -3,6 +3,7 @@ package shashov.translate.internals.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
+import shashov.translate.internals.mvp.models.HistoryModel;
 import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.networking.YandexAPI;
@@ -21,7 +22,13 @@ public class TranslateModule {
 
     @Provides
     @Singleton
-    TranslateModel provideTranslateModel(YandexAPI yandexAPI, Realm realm, NetworkManager networkManager) {
-        return new TranslateModel(yandexAPI, realm, networkManager);
+    TranslateModel provideTranslateModel(HistoryModel historyModel, YandexAPI yandexAPI, Realm realm, NetworkManager networkManager) {
+        return new TranslateModel(historyModel, yandexAPI, realm, networkManager);
+    }
+
+    @Provides
+    @Singleton
+    HistoryModel provideHistoryModel(Realm realm) {
+        return new HistoryModel(realm);
     }
 }

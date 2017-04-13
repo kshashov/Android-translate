@@ -12,35 +12,12 @@ import shashov.translate.networking.YandexAPI;
 import shashov.translate.support.NetworkManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class LanguageModel implements MVP.Model {
-    private Subscription observable;
-
-    public void unsubscribe() {
-        if (observable != null) {
-            observable.unsubscribe();
-        }
-    }
-
-    public class LangsResponse {
-
-        @SerializedName("langs")
-        Map<String, String> langsMap;
-
-        public Map<String, String> getLangs() {
-            return langsMap;
-        }
-
-        public void setLangs(Map<String, String> mapLangs) {
-            this.langsMap = mapLangs;
-        }
-    }
-
     private static final String TAG = LanguageModel.class.getSimpleName();
-
+    private Subscription observable;
     private YandexAPI yandexAPI;
     private List<Language> langsCached = new ArrayList<>();
     private NetworkManager networkManager;
@@ -89,7 +66,7 @@ public class LanguageModel implements MVP.Model {
                                            result.add(language);
                                        }
 
-                                       cache(result, null);
+                                       cache(result);
                                        onDataLoaded.onSuccess(langsCached);
                                    }
                                }
@@ -107,14 +84,27 @@ public class LanguageModel implements MVP.Model {
         return new ArrayList<>();
     }
 
-    @Override
-    public void cache(List<?> data, Date date) {
-        langsCached = (List<Language>) data;
+    public void cache(List<Language> data) {
+        langsCached = data;
     }
 
-    @Override
-    public void clearCache() {
-        langsCached.clear();
+    public void unsubscribe() {
+        if (observable != null) {
+            observable.unsubscribe();
+        }
     }
 
+    public class LangsResponse {
+
+        @SerializedName("langs")
+        Map<String, String> langsMap;
+
+        public Map<String, String> getLangs() {
+            return langsMap;
+        }
+
+        public void setLangs(Map<String, String> mapLangs) {
+            this.langsMap = mapLangs;
+        }
+    }
 }

@@ -5,6 +5,7 @@ import shashov.translate.TranslateApp;
 import shashov.translate.dao.Language;
 import shashov.translate.dao.Translate;
 import shashov.translate.internals.mvp.MVP;
+import shashov.translate.internals.mvp.models.HistoryModel;
 import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.internals.mvp.views.TranslateView;
@@ -18,10 +19,11 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
     LanguageModel langModel;
     @Inject
     TranslateModel translateModel;
+    @Inject
+    HistoryModel historyModel;
 
     private List<Language> langs = new ArrayList<>();
     private Translate lastTranslate; //last successful translate
-    //private Translate currentTranslate; //last saved translate without output
     private int posOfFromLang = 0;
     private int posOfToLang = 0;
     private boolean isLoading = false;
@@ -35,7 +37,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
 
         if (translate == null) {
             //try to open last translate record from data model (==realm)
-            if ((translate = translateModel.getLastTranslate()) != null) {
+            if ((translate = historyModel.getLast()) != null) {
                 //save output in cache
                 lastTranslate = translate;
             } else {
@@ -90,7 +92,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         }
 
         getView().showContent();
-        getView().populateList(langs);
+        getView().populateLangs(langs);
         getView().changeLang(posOfFromLang, true);
         getView().changeLang(posOfToLang, false);
 
@@ -116,6 +118,12 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         getView().showTranslate();
     }
 
+    public void changeFavorite() {
+        if (lastTranslate != null) {
+            historyModel.changeFavorite(lastTranslate);
+        }
+    }
+
     public void translate(final String input) {
         if (langs.isEmpty()) {
             return;
@@ -129,14 +137,13 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
                 && langs.get(posOfFromLang).getCode().equals(lastTranslate.getFromLang())
                 && langs.get(posOfToLang).getCode().equals(lastTranslate.getToLang())) {
             //result in cache
-            loadingTranslate(false, lastTranslate.getOutput());
+            loadingTranslate(false, lastTranslate);
             return;
         }
 
         //empty request
         if (input.isEmpty()) {
-            //TODO save empty result to translateModel?
-            loadingTranslate(false, "");
+            loadingTranslate(false, new Translate());
             return;
         }
 
@@ -151,7 +158,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
             public void onSuccess(Translate data) {
                 if (getView() != null) {
                     lastTranslate = data;
-                    loadingTranslate(false, lastTranslate.getOutput());
+                    loadingTranslate(false, lastTranslate);
                 }
             }
 
@@ -174,7 +181,7 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         }
     }
 
-    private void loadingTranslate(boolean isLoading, String output) {
+    private void loadingTranslate(boolean isLoading, Translate output) {
         loadingTranslate(isLoading);
         getView().showOutput(output);
     }

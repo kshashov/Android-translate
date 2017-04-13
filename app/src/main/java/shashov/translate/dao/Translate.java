@@ -67,4 +67,8 @@ public class Translate extends RealmObject implements Serializable {
     public void setFavTime(long favTime) {
         this.favTime = favTime;
     }
+
+    public boolean isFavorite() {
+        return favTime != 0;
+    }
 }

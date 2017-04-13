@@ -6,7 +6,7 @@ import shashov.translate.dao.Translate;
 import shashov.translate.eventbus.RxEventBus;
 import shashov.translate.eventbus.events.OpenTranslateEvent;
 import shashov.translate.internals.mvp.MVP;
-import shashov.translate.internals.mvp.models.TranslateModel;
+import shashov.translate.internals.mvp.models.HistoryModel;
 import shashov.translate.internals.mvp.views.HistoryView;
 
 import javax.inject.Inject;
@@ -15,13 +15,14 @@ import java.util.HashMap;
 public class HistoryPresenter extends MVP.Presenter<HistoryView> {
 
     @Inject
-    TranslateModel translateModel;
+    HistoryModel historyModel;
 
     @Inject
     RxEventBus eventBus;
+
     private HashMap<String, OrderedRealmCollection<Translate>> data = new HashMap<>();
-    public static final String FAV = "fav";
-    public static final String ALL = "all";
+    private static final String FAV = "fav";
+    private static final String ALL = "all";
 
     public HistoryPresenter() {
         TranslateApp.getAppComponent().inject(this);
@@ -59,11 +60,11 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
     }
 
     private void loadAll(MVP.Model.OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
-        translateModel.getAll(onDataLoaded);
+        historyModel.getAll(onDataLoaded);
     }
 
     private void loadFavorites(MVP.Model.OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
-        translateModel.getFav(onDataLoaded);
+        historyModel.getFav(onDataLoaded);
     }
 
     private void showContent(OrderedRealmCollection<Translate> translates) {
@@ -75,5 +76,9 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
 
     public void onClickTranslate(Translate translate) {
         eventBus.post(new OpenTranslateEvent(translate));
+    }
+
+    public void onChangeFavorite(Translate translate) {
+        historyModel.changeFavorite(translate);
     }
 }
