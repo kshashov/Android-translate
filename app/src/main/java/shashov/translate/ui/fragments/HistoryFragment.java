@@ -1,20 +1,24 @@
 package shashov.translate.ui.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
@@ -46,6 +50,9 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
 
     @BindView(R.id.sv_history)
     SearchView svHistory;
+
+    @BindView(R.id.ib_delete)
+    ImageButton ibDelete;
 
     private HistorySearchAdapter adapter;
     private Parcelable rvState;
@@ -97,7 +104,7 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tlHistory.getTabAt(isAll ? ALL_TAB : FAV_TAB).select(); //TODO add const ALL_TAB = 0 FAV_TAB = 1
+        tlHistory.getTabAt(isAll ? ALL_TAB : FAV_TAB).select();
         tlHistory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -176,6 +183,31 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     }
 
     @Override
+    public void showDeleteDialog(String question) {
+        final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setMessage(question)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getPresenter().deleteHistory(isAll);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
     public void onClickItem(Translate translate) {
         getPresenter().onClickTranslate(translate);
     }
@@ -224,4 +256,8 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         return false;
     }
 
+    @OnClick(R.id.ib_delete)
+    public void onDeleteClick() {
+        getPresenter().onDeleteHistory(isAll);
+    }
 }

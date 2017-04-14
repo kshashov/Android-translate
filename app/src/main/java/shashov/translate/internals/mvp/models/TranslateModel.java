@@ -66,9 +66,8 @@ public class TranslateModel implements MVP.Model {
                                        } else {
                                            translate.setOutput("");
                                        }
-
                                        cache(translate);
-                                       onDataLoaded.onSuccess(translate);
+                                       onDataLoaded.onSuccess(historyModel.findTranslate(translate));
                                    }
                                }
                     );

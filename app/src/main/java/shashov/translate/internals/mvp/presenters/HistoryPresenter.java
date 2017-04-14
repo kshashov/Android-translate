@@ -1,6 +1,7 @@
 package shashov.translate.internals.mvp.presenters;
 
 import io.realm.OrderedRealmCollection;
+import shashov.translate.R;
 import shashov.translate.TranslateApp;
 import shashov.translate.dao.Translate;
 import shashov.translate.eventbus.RxEventBus;
@@ -80,5 +81,17 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
 
     public void onChangeFavorite(Translate translate) {
         historyModel.changeFavorite(translate);
+    }
+
+    public void onDeleteHistory(boolean isAll) {
+        String text = getView().getActivity().getString(isAll ? R.string.deleteAll : R.string.deleteFav);
+        getView().showDeleteDialog(text);
+    }
+
+    public void deleteHistory(boolean isAll) {
+        final String key = isAll ? ALL : FAV;
+        if (data.containsKey(key)) {
+            historyModel.delete(data.get(key), isAll);
+        }
     }
 }

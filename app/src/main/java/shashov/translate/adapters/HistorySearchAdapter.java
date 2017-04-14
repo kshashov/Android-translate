@@ -63,7 +63,7 @@ public class HistorySearchAdapter extends RealmSearchAdapter {
                 historyListener.onChangeFavorite((Translate) getItem(viewHolder.getLayoutPosition()));
             }
         });
-        viewHolder.tvLangsCode.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 historyListener.onClickItem((Translate) getItem(viewHolder.getLayoutPosition()));

@@ -34,12 +34,12 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
 
     public void loadData(Translate translate) {
         getView().showLoading();
-
+        lastTranslate = historyModel.getLast();
         if (translate == null) {
             //try to open last translate record from data model (==realm)
-            if ((translate = historyModel.getLast()) != null) {
+            if (lastTranslate != null) {
                 //save output in cache
-                lastTranslate = translate;
+                translate = lastTranslate;
             } else {
                 //open empty translate request
                 translate = new Translate();
@@ -128,9 +128,14 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         if (langs.isEmpty()) {
             return;
         }
+        if (getView() == null) {
+            return;
+        }
         if (isLoading) {
+            //stop current task
             translateModel.unsubscribe();
         }
+
         loadingTranslate(true);
         if (lastTranslate != null
                 && input.equals(lastTranslate.getInput())
@@ -164,9 +169,11 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
 
             @Override
             public void onFail(String error) {
-                loadingTranslate(false);
-                getView().showTranslateReload();
-                getView().showError(error);
+                if (getView() != null) {
+                    loadingTranslate(false);
+                    getView().showTranslateReload();
+                    getView().showError(error);
+                }
             }
         });
     }
@@ -182,13 +189,17 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
     }
 
     private void loadingTranslate(boolean isLoading, Translate output) {
-        loadingTranslate(isLoading);
-        getView().showOutput(output);
+        if (getView() != null) {
+            loadingTranslate(isLoading);
+            getView().showOutput(output);
+        }
     }
 
     private void loadingTranslate(boolean isLoading) {
         this.isLoading = isLoading;
-        getView().showLoadingTranslate(isLoading);
+        if (getView() != null) {
+            getView().showLoadingTranslate(isLoading);
+        }
     }
 
     private String getAppLang() {

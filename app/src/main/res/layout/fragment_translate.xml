@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:layout_above="@+id/language_panel"
+            android:layout_above="@+id/ll_input"
             android:visibility="gone">
 
             <TextView
@@ -61,14 +61,15 @@
             android:id="@+id/tv_output"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@+id/language_panel"
             android:textColor="@color/textTranslated"
+            android:background="@color/bgOutputPanel"
             android:gravity="center"
             android:scrollbars="vertical"
             android:fontFamily="@string/font_family_light"
             android:singleLine="false"
-            android:padding="10dp"
+            android:padding="@dimen/paddingNormal"
             android:text=""
+            android:layout_above="@+id/ll_input"
             android:textIsSelectable="true"
             android:textSize="@dimen/translateTextSizeBig"/>
 
@@ -81,84 +82,94 @@
             android:layout_height="wrap_content"/>
 
         <LinearLayout
-            android:id="@+id/language_panel"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/input_panel"
-            android:background="@color/bgLanguagePanel"
-            android:gravity="center"
-            android:padding="15dp">
-
-            <Spinner
-                android:id="@+id/sp_lang_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"/>
-
-            <ImageButton
-                android:id="@+id/ib_swap"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:padding="2dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.3"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/swap"/>
-
-            <Spinner
-                android:id="@+id/sp_lang_output"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"/>
-
-            <com.github.ivbaranov.mfb.MaterialFavoriteButton
-                android:id="@+id/translate_favorite"
-                android:layout_alignParentLeft="true"
-                app:mfb_animate_favorite="true"
-                app:mfb_animate_unfavorite="false"
-                app:mfb_padding="12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/input_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/ll_input"
             android:layout_alignParentBottom="true"
-            android:padding="5dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/paddingNormal"
+            android:padding="@dimen/paddingSmall"
+            android:background="@color/bgInputPanel">
 
-            <EditText
-                android:id="@+id/et_input"
+            <LinearLayout
+                android:id="@+id/language_panel"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top"
-                android:inputType="text"
-                android:imeOptions="actionDone"
-                android:text=""
-                android:textSize="@dimen/inputTextSize"
-                android:hint="@string/hitInput"
-                android:scrollbars="vertical"
-                android:textColor="@color/textInput"/>
+                android:gravity="center">
 
-            <ImageView
-                android:id="@+id/img_clear"
-                android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/sp_lang_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center"/>
+
+                <ImageButton
+                    android:id="@+id/ib_swap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:src="@mipmap/ic_swap_horiz_black_24dp"/>
+
+                <Spinner
+                    android:id="@+id/sp_lang_output"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center"/>
+
+                <com.github.ivbaranov.mfb.MaterialFavoriteButton
+                    android:id="@+id/translate_favorite"
+                    app:mfb_animate_favorite="true"
+                    app:mfb_animate_unfavorite="false"
+                    app:mfb_padding="10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/input_panel"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:src="@android:drawable/ic_notification_clear_all"/>
+                android:padding="5dp">
 
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/et_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:text=""
+                    android:textSize="@dimen/inputTextSize"
+                    android:padding="@dimen/paddingSmall"
+                    android:hint="@string/hitInput"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/textInput"
+                    android:background="@drawable/border_shape"/>
+
+                <ImageView
+                    android:id="@+id/img_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:padding="2dp"
+                    android:src="@mipmap/ic_clear_black_18dp"/>
+
+            </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/pb"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"/>
-
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

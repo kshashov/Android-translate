@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Android -->
-    <color name="colorPrimary">#00897b</color>
-    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorPrimary">@color/ghostWhite</color>
+    <color name="colorPrimaryDark">@color/colorAccent</color>
     <color name="colorAccent">#ffc107</color>
 
     <!-- Base  Colors -->
+    <color name="ghostWhite">#FFf6f9fc</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="gray">#FF999999</color>
+    <color name="grayLite">#dcdcdc</color>
+    <color name="grayDark">#454545</color>
+    <color name="grayDark2">#2e2e2e</color>
+    <color name="colorPrimaryRipple">#423F51B5</color>
+    <color name="darkSlateGray">#ff32325d</color>
+    <color name="dodgerBlue">#ff277bff</color>
 
     <!-- App Colors -->
-    <color name="itemSelected">#4DB6AC</color>
     <color name="textInput">@color/black</color>
+    <color name="textBase">@color/black</color>
     <color name="textTranslated">@color/black</color>
     <color name="textTranslatedLoading">@color/gray</color>
-    <color name="bgLanguagePanel">@color/gray</color>
-    <color name="bgBottomMenu">@color/gray</color>
+    <color name="bgInputPanel">@color/white</color>
+    <color name="bgBottomMenu">@color/white</color>
+    <color name="bmItem">@color/gray</color>
+    <color name="bmItemCheck">@color/black</color>
+    <color name="bnvBorder">@color/gray</color>
+    <color name="bgApp">@color/ghostWhite</color>
+    <color name="borderShapeColor">@color/grayLite</color>
+    <color name="bgOutputPanel">@color/bgApp</color>
+    <color name="textCaption">@color/gray</color>
+    <color name="bgHistoryItem">@color/white</color>
+    <color name="bgHistory">@color/white</color>
+
 </resources>

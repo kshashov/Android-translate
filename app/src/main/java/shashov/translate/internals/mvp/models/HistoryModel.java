@@ -64,4 +64,24 @@ public class HistoryModel implements MVP.Model {
         }
         return null;
     }
+
+    public void delete(final OrderedRealmCollection<Translate> items, boolean isAll) {
+        if (isAll) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    items.deleteAllFromRealm();
+                }
+            });
+        } else {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    for (Translate translate : items) {
+                        translate.setFavTime(0);
+                    }
+                }
+            });
+        }
+    }
 }

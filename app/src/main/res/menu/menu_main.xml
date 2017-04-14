@@ -4,21 +4,15 @@
     <item
         android:id="@+id/action_translate"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_translate_black_24dp"
         android:title="@string/translate"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_history"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_history_black_24dp"
         android:title="@string/history"
         app:showAsAction="ifRoom"/>
 
-    <!--<item
-        android:id="@+id/action_settings"
-        android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />-->
 </menu>

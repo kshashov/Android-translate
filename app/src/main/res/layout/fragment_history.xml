@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/bgHistory">
 
     <ProgressBar
         android:id="@+id/pb"
@@ -18,37 +19,61 @@
         android:layout_height="match_parent"
         android:text="@string/no_data_available"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tl_history"
+    <RelativeLayout
+        android:id="@+id/rl_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabGravity="fill"
-        app:tabMode="fixed">
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
-        <android.support.design.widget.TabItem
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/all"/>
+            app:tabGravity="center"
+            app:tabMode="fixed"
+            android:layout_centerHorizontal="true">
 
-        <android.support.design.widget.TabItem
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all"/>
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorites"/>
+        </android.support.design.widget.TabLayout>
+
+        <ImageButton
+            android:id="@+id/ib_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/favorites"/>
-    </android.support.design.widget.TabLayout>
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/paddingSmall"
+            android:background="@null"
+            android:src="@mipmap/ic_delete_forever_black_24dp"/>
+    </RelativeLayout>
 
     <android.support.v7.widget.SearchView
         android:id="@+id/sv_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:layout_below="@+id/tl_history">
-
+        android:layout_below="@+id/rl_head">
     </android.support.v7.widget.SearchView>
 
+    <View
+        android:id="@+id/horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/sv_history"
+        android:background="@color/borderShapeColor"></View>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/sv_history"/>
+        android:layout_below="@+id/horizontal_line"/>
 
 </RelativeLayout>

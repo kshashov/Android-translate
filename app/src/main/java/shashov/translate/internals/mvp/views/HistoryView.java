@@ -7,4 +7,6 @@ import shashov.translate.internals.mvp.MVP;
 public interface HistoryView extends MVP.View {
 
     void populateList(OrderedRealmCollection<Translate> data);
+
+    void showDeleteDialog(String question);
 }
