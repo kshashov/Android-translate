@@ -170,6 +170,9 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
     }
 
     private Translate getCurrentState() {
+        if (spOutputLang.getAdapter() == null) {
+            return null;
+        }
         Translate translate = new Translate();
         translate.setInput(etInputText.getText().toString());
         translate.setToLang(((LanguageSpinnerAdapter) spOutputLang.getAdapter()).getLanguage(spOutputLang.getSelectedItemPosition()).getCode());

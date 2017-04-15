@@ -136,19 +136,19 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
             translateModel.unsubscribe();
         }
 
-        loadingTranslate(true);
+        showLoadingTranslate(true);
         if (lastTranslate != null
                 && input.equals(lastTranslate.getInput())
                 && langs.get(posOfFromLang).getCode().equals(lastTranslate.getFromLang())
                 && langs.get(posOfToLang).getCode().equals(lastTranslate.getToLang())) {
             //result in cache
-            loadingTranslate(false, lastTranslate);
+            showOutput(lastTranslate);
             return;
         }
 
         //empty request
         if (input.isEmpty()) {
-            loadingTranslate(false, new Translate());
+            showOutput(new Translate());
             return;
         }
 
@@ -163,14 +163,14 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
             public void onSuccess(Translate data) {
                 if (getView() != null) {
                     lastTranslate = data;
-                    loadingTranslate(false, lastTranslate);
+                    showOutput(lastTranslate);
                 }
             }
 
             @Override
             public void onFail(String error) {
                 if (getView() != null) {
-                    loadingTranslate(false);
+                    showLoadingTranslate(false);
                     getView().showTranslateReload();
                     getView().showError(error);
                 }
@@ -188,14 +188,14 @@ public class TranslatePresenter extends MVP.Presenter<TranslateView> {
         }
     }
 
-    private void loadingTranslate(boolean isLoading, Translate output) {
+    private void showOutput(Translate output) {
         if (getView() != null) {
-            loadingTranslate(isLoading);
+            showLoadingTranslate(false);
             getView().showOutput(output);
         }
     }
 
-    private void loadingTranslate(boolean isLoading) {
+    private void showLoadingTranslate(boolean isLoading) {
         this.isLoading = isLoading;
         if (getView() != null) {
             getView().showLoadingTranslate(isLoading);

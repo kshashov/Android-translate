@@ -1,11 +1,13 @@
 package shashov.translate.internals.mvp.models;
 
+import android.content.res.Resources;
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import shashov.translate.R;
 import shashov.translate.dao.Language;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.networking.YandexAPI;
@@ -17,14 +19,16 @@ import java.util.Map;
 
 public class LanguageModel implements MVP.Model {
     private static final String TAG = LanguageModel.class.getSimpleName();
+    private final Resources resources;
     private Subscription observable;
-    private YandexAPI yandexAPI;
+    private final YandexAPI yandexAPI;
     private List<Language> langsCached = new ArrayList<>();
-    private NetworkManager networkManager;
+    private final NetworkManager networkManager;
 
-    public LanguageModel(YandexAPI yandexAPI, NetworkManager networkManager) {
+    public LanguageModel(Resources resources, YandexAPI yandexAPI, NetworkManager networkManager) {
         this.yandexAPI = yandexAPI;
         this.networkManager = networkManager;
+        this.resources = resources;
     }
 
     public void getLangs(String lang, final OnDataLoaded<List<Language>> onDataLoaded) {
@@ -32,7 +36,7 @@ public class LanguageModel implements MVP.Model {
         if (!langsCached.isEmpty()) {
             onDataLoaded.onSuccess(langsCached);
         } else if (!networkManager.isConnected()) {
-            onDataLoaded.onFail("No cached data and not Internet");
+            onDataLoaded.onFail(resources.getString(R.string.no_internet));
         } else {
             observable = yandexAPI.getLangs(YandexAPI.API_CODE, lang)
                     .subscribeOn(Schedulers.newThread())
@@ -45,10 +49,9 @@ public class LanguageModel implements MVP.Model {
                                    @Override
                                    public void onError(Throwable e) {
                                        Log.d(TAG, "onError() called with: " + "e = [" + e + "]");
-                                       langsCached.clear();
                                        langsCached = checkIfCached();
                                        if (langsCached.isEmpty()) {
-                                           onDataLoaded.onFail(e.toString());
+                                           onDataLoaded.onFail(resources.getString(R.string.wtf_error));
                                        } else {
                                            onDataLoaded.onSuccess(langsCached);
                                        }
@@ -59,6 +62,10 @@ public class LanguageModel implements MVP.Model {
                                        Log.d(TAG, "onNext() called with: " + "langs = ["
                                                + langsResponse + "]");
                                        List result = new ArrayList();
+                                       if ((langsResponse.getLangs() == null) || langsResponse.getLangs().isEmpty()) {
+                                           onDataLoaded.onFail(resources.getString(R.string.wtf_error));
+                                           return;
+                                       }
                                        for (Map.Entry<String, String> entry : langsResponse.getLangs().entrySet()) {
                                            Language language = new Language();
                                            language.setCode(entry.getKey());

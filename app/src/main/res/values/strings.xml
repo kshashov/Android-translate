@@ -4,6 +4,7 @@
 
     <!-- text -->
     <string name="app_name">TranslateApp</string>
+    <string name="no_internet">"No cached data and not Internet</string>
     <string name="no_data_available">No data available</string>
     <string name="hitInput">Type your text here</string>
     <string name="translate">Translate</string>
@@ -13,4 +14,5 @@
     <string name="favorites">Favorites</string>
     <string name="deleteAll">Are you sure you want to clear your history?</string>
     <string name="deleteFav">Are you sure you want to clear your favorites?</string>
+    <string name="wtf_error">An unexpected error occurred</string>
 </resources>

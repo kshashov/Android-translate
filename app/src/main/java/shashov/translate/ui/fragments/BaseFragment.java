@@ -27,7 +27,7 @@ public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment imp
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenterCache.putPresenter(getClass().getName(), presenter); //TODO ?
+        presenterCache.putPresenter(getClass().getName(), presenter);
     }
 
     @Override
@@ -52,7 +52,7 @@ public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment imp
     public void onStop() {
         if (!getActivity().isChangingConfigurations()) {
             // activity is stopped normally, remove the cached presenter so it's not cached
-            // presenterCache.removePresenter(presenter); TODO ?
+            // presenterCache.removePresenter(presenter); TODO need? :(
         }
         // onStop will clear view reference
         presenter.onStop(getActivity().isChangingConfigurations());

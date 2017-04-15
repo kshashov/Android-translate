@@ -1,6 +1,7 @@
 package shashov.translate.internals.di.modules;
 
 import android.app.Application;
+import android.content.res.Resources;
 import dagger.Module;
 import dagger.Provides;
 import shashov.translate.eventbus.RxEventBus;
@@ -33,5 +34,11 @@ public class AppModule {
     @Singleton
     RxEventBus provideEventBus() {
         return new RxEventBus();
+    }
+
+    @Provides
+    @Singleton
+    Resources provideResources() {
+        return this.mApplication.getResources();
     }
 }
