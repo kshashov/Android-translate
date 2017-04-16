@@ -1,0 +1,18 @@
+<resources>
+    <!-- using in code -->
+    <string name="lang_code">ru</string>
+
+    <!-- text -->
+    <string name="app_name">TranslateApp</string>
+    <string name="no_internet">Отсутствует соединение с Интернет</string>
+    <string name="no_data_available">Отсутствуют данные для отображения</string>
+    <string name="hitInput">Введите текст</string>
+    <string name="translate">Перевод</string>
+    <string name="history">История</string>
+    <string name="reload">Обновить</string>
+    <string name="all">История</string>
+    <string name="favorites">Избранное</string>
+    <string name="deleteAll">Удалить всю историю переводов?</string>
+    <string name="deleteFav">Удалит все переводы из избранного?</string>
+    <string name="wtf_error">Произошла непредвиденная ошибка</string>
+</resources>
