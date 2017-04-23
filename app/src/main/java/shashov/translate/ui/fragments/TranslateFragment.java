@@ -169,6 +169,9 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
         translate = getCurrentState();
     }
 
+    /**
+     * Save field state to Translate object
+     */
     private Translate getCurrentState() {
         if (spOutputLang.getAdapter() == null) {
             return null;
@@ -179,6 +182,7 @@ public class TranslateFragment extends BaseFragment<TranslatePresenter> implemen
         translate.setFromLang(((LanguageSpinnerAdapter) spInputLang.getAdapter()).getLanguage(spInputLang.getSelectedItemPosition()).getCode());
         return translate;
     }
+
 
     @Override
     public void showLoading() {

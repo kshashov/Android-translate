@@ -89,6 +89,9 @@ public class TranslateModel implements MVP.Model {
         }
     }
 
+    /**
+     * Save Translate object to to realm
+     */
     public void cache(Translate translate) {
         realm.beginTransaction();
         translate.setTime((new Date()).getTime());

@@ -10,9 +10,6 @@ import shashov.translate.support.TranslateRealmMigration;
 
 import java.util.Date;
 
-/**
- * Created by envoy on 13.04.2017.
- */
 public class HistoryModel implements MVP.Model {
     private static final String TAG = HistoryModel.class.getSimpleName();
     private final Realm realm;
@@ -32,12 +29,17 @@ public class HistoryModel implements MVP.Model {
         return null;
     }
 
-
+    /**
+     * Find all translates in realm
+     */
     public void getAll(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
         OrderedRealmCollection<Translate> translates = realm.where(Translate.class).findAllSorted(TranslateRealmMigration.TranslateColumns.TIME, Sort.DESCENDING);
         onDataLoaded.onSuccess(translates);
     }
 
+    /**
+     * Find favorite translates in realm
+     */
     public void getFav(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
         OrderedRealmCollection<Translate> translates = realm
                 .where(Translate.class)
@@ -52,6 +54,12 @@ public class HistoryModel implements MVP.Model {
         realm.commitTransaction();
     }
 
+    /**
+     * Find same translate in realm
+     *
+     * @param translate
+     * @return
+     */
     public Translate findTranslate(Translate translate) {
         RealmResults<Translate> result = realm
                 .where(Translate.class)
@@ -65,6 +73,11 @@ public class HistoryModel implements MVP.Model {
         return null;
     }
 
+    /**
+     * Delete Translate items from history all favorite list
+     * @param items
+     * @param isAll false if delete only favorite status
+     */
     public void delete(final OrderedRealmCollection<Translate> items, boolean isAll) {
         if (isAll) {
             realm.executeTransaction(new Realm.Transaction() {

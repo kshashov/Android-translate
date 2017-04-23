@@ -228,19 +228,6 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         outState.putString(SV_TEXT, svHistoryText);
         outState.putBoolean(IS_ALL, isAll);
     }
-/*
-    @Override TODO test and clear this shit
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            if ((savedInstanceState.containsKey(RV_STATE))) {
-                if (rvState == null) {
-                    rvState = savedInstanceState.getParcelable(RV_STATE);
-                }
-            }
-                svHistoryText = savedInstanceState.getString(SV_TEXT,svHistoryText);
-        }
-    }*/
 
     @Override
     public boolean onQueryTextSubmit(String query) {

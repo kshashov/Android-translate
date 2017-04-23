@@ -52,7 +52,6 @@ public abstract class BaseFragment<T extends MVP.Presenter> extends Fragment imp
     public void onStop() {
         if (!getActivity().isChangingConfigurations()) {
             // activity is stopped normally, remove the cached presenter so it's not cached
-            // presenterCache.removePresenter(presenter); TODO need? :(
         }
         // onStop will clear view reference
         presenter.onStop(getActivity().isChangingConfigurations());
