@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 25
@@ -21,6 +22,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            testCoverageEnabled true
+        }
+    }
+    productFlavors {
+        free {}
+        paid {}
     }
     lintOptions {
         disable 'MissingTranslation'
@@ -68,8 +78,6 @@ dependencies {
     // rx
     compile "io.reactivex:rxjava:$rxJava"
     compile "io.reactivex:rxandroid:$rxAndroid"
-
-
 
 
 }
