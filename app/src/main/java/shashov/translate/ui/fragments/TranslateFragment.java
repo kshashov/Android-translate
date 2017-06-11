@@ -16,12 +16,12 @@ import butterknife.*;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.lb.auto_fit_textview.AutoResizeTextView;
 import shashov.translate.R;
-import shashov.translate.adapters.LanguageSpinnerAdapter;
 import shashov.translate.dao.Language;
 import shashov.translate.dao.Translate;
 import shashov.translate.internals.di.components.AppComponent;
 import shashov.translate.internals.mvp.presenters.TranslatePresenter;
 import shashov.translate.internals.mvp.views.TranslateView;
+import shashov.translate.ui.adapters.LanguageSpinnerAdapter;
 
 import java.util.List;
 import java.util.Timer;

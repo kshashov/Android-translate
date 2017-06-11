@@ -22,11 +22,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
-import shashov.translate.adapters.HistorySearchAdapter;
 import shashov.translate.dao.Translate;
 import shashov.translate.internals.di.components.AppComponent;
 import shashov.translate.internals.mvp.presenters.HistoryPresenter;
 import shashov.translate.internals.mvp.views.HistoryView;
+import shashov.translate.ui.adapters.HistorySearchAdapter;
 
 public class HistoryFragment extends BaseFragment<HistoryPresenter> implements HistoryView, HistorySearchAdapter.HistoryListener, SearchView.OnQueryTextListener {
     public static final String TAG = "HistoryFragment";

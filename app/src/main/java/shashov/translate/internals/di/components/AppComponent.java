@@ -10,6 +10,7 @@ import shashov.translate.internals.di.modules.NetworkModule;
 import shashov.translate.internals.di.modules.TranslateModule;
 import shashov.translate.internals.mvp.presenters.HistoryPresenter;
 import shashov.translate.internals.mvp.presenters.TranslatePresenter;
+import shashov.translate.mvp.presenters.SplashPresenter;
 import shashov.translate.networking.YandexAPI;
 import shashov.translate.support.NetworkManager;
 import shashov.translate.ui.MainActivity;
@@ -32,6 +33,8 @@ public interface AppComponent {
     void inject(HistoryFragment historyFragment);
 
     void inject(TranslateFragment translateFragment);
+
+    void inject(SplashPresenter splashPresenter);
 
     Gson gson();
 

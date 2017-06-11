@@ -7,6 +7,7 @@ import io.realm.Realm;
 import shashov.translate.internals.mvp.models.HistoryModel;
 import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.internals.mvp.models.TranslateModel;
+import shashov.translate.mvp.models.LangsModel;
 import shashov.translate.networking.YandexAPI;
 import shashov.translate.support.NetworkManager;
 
@@ -19,6 +20,12 @@ public class TranslateModule {
     @Singleton
     LanguageModel provideLanguageModel(Resources resources, YandexAPI yandexAPI, NetworkManager networkManager) {
         return new LanguageModel(resources, yandexAPI, networkManager);
+    }
+
+    @Provides
+    @Singleton
+    LangsModel provideLangsModel(Resources resources, YandexAPI yandexAPI, NetworkManager networkManager) {
+        return new LangsModel(resources, yandexAPI, networkManager);
     }
 
     @Provides
