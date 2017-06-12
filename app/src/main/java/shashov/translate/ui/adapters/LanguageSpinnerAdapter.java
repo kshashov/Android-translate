@@ -33,4 +33,13 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
 
         return null;
     }
+
+    public int getPosition(String langCode) {
+        for (int i = 0; i < langs.size(); i++) {
+            if (langs.get(i).getCode().equals(langCode)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 }

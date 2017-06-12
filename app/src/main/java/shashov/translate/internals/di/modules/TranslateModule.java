@@ -5,7 +5,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
 import shashov.translate.internals.mvp.models.HistoryModel;
-import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.mvp.models.LangsModel;
 import shashov.translate.networking.YandexAPI;
@@ -15,12 +14,6 @@ import javax.inject.Singleton;
 
 @Module
 public class TranslateModule {
-
-    @Provides
-    @Singleton
-    LanguageModel provideLanguageModel(Resources resources, YandexAPI yandexAPI, NetworkManager networkManager) {
-        return new LanguageModel(resources, yandexAPI, networkManager);
-    }
 
     @Provides
     @Singleton

@@ -2,9 +2,10 @@ package shashov.translate.internals.di.modules;
 
 import android.app.Application;
 import android.content.res.Resources;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 import dagger.Module;
 import dagger.Provides;
-import shashov.translate.eventbus.RxEventBus;
 import shashov.translate.internals.mvp.presenters.PresenterCache;
 
 import javax.inject.Singleton;
@@ -32,8 +33,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    RxEventBus provideEventBus() {
-        return new RxEventBus();
+    Bus provideEventBus() {
+        return new Bus(ThreadEnforcer.MAIN);
     }
 
     @Provides

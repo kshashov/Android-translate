@@ -1,10 +1,10 @@
 package shashov.translate.internals.mvp.presenters;
 
+import com.squareup.otto.Bus;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
 import shashov.translate.TranslateApp;
 import shashov.translate.dao.Translate;
-import shashov.translate.eventbus.RxEventBus;
 import shashov.translate.eventbus.events.OpenTranslateEvent;
 import shashov.translate.internals.mvp.MVP;
 import shashov.translate.internals.mvp.models.HistoryModel;
@@ -19,7 +19,7 @@ public class HistoryPresenter extends MVP.Presenter<HistoryView> {
     HistoryModel historyModel;
 
     @Inject
-    RxEventBus eventBus;
+    Bus eventBus;
 
     private HashMap<String, OrderedRealmCollection<Translate>> data = new HashMap<>();
     private static final String FAV = "fav";

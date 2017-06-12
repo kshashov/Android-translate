@@ -13,7 +13,6 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import shashov.translate.R;
 import shashov.translate.mvp.presenters.SplashPresenter;
 import shashov.translate.mvp.views.SplashView;
-import shashov.translate.ui.MainActivity;
 
 /**
  * Created by kirill on 10.06.17.
@@ -39,6 +38,7 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
 
     @Override
     public void showLoading() {
+        progress.getIndeterminateDrawable().start();
         llNoData.setVisibility(View.INVISIBLE);
         llLoading.setVisibility(View.VISIBLE);
     }
@@ -47,6 +47,11 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
     public void showNoData() {
         llNoData.setVisibility(View.VISIBLE);
         llLoading.setVisibility(View.INVISIBLE);
+    }
+
+    @OnClick(R.id.btn_reload)
+    public void onClickReload() {
+        splashPresenter.loadData();
     }
 
     @Override

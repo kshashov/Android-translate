@@ -4,29 +4,6 @@
                 android:layout_height="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/ll_no_data"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data_available"
-            android:textSize="@dimen/baseTextSize"/>
-
-        <Button
-            android:id="@+id/btn_reload"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reload"
-            android:textSize="@dimen/baseTextSize"/>
-    </LinearLayout>
-
-
     <RelativeLayout
         android:id="@+id/rl_translate_container"
         android:layout_width="match_parent"
@@ -162,14 +139,4 @@
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/pb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerInParent="true"/>
 </RelativeLayout>

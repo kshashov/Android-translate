@@ -2,13 +2,13 @@ package shashov.translate.mvp.models;
 
 import android.content.res.Resources;
 import android.util.Log;
+import com.google.gson.annotations.SerializedName;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import shashov.translate.R;
 import shashov.translate.dao.Language;
-import shashov.translate.internals.mvp.models.LanguageModel;
 import shashov.translate.networking.YandexAPI;
 import shashov.translate.support.NetworkManager;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by kirill on 11.06.17.
  */
 public class LangsModel {
-    private static final String TAG = LanguageModel.class.getSimpleName();
+    private static final String TAG = LangsModel.class.getSimpleName();
     private final Resources resources;
     private final YandexAPI yandexAPI;
     private List<Language> langsCached = new ArrayList<>();
@@ -72,6 +72,20 @@ public class LangsModel {
                 );
 
         return subscription;
+    }
+
+    public class LangsResponse {
+
+        @SerializedName("langs")
+        Map<String, String> langsMap;
+
+        public Map<String, String> getLangs() {
+            return langsMap;
+        }
+
+        public void setLangs(Map<String, String> mapLangs) {
+            this.langsMap = mapLangs;
+        }
     }
 
 }

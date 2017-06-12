@@ -49,8 +49,13 @@ public class HistoryModel implements MVP.Model {
     }
 
     public void changeFavorite(Translate translate) {
+        Translate savedTranslate = findTranslate(translate);
+        if (savedTranslate == null) {
+            return;
+        }
+
         realm.beginTransaction();
-        translate.setFavTime(translate.isFavorite() ? 0 : (new Date()).getTime());
+        savedTranslate.setFavTime(savedTranslate.isFavorite() ? 0 : (new Date()).getTime());
         realm.commitTransaction();
     }
 
@@ -75,6 +80,7 @@ public class HistoryModel implements MVP.Model {
 
     /**
      * Delete Translate items from history all favorite list
+     *
      * @param items
      * @param isAll false if delete only favorite status
      */

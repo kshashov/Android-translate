@@ -20,6 +20,14 @@ public class Translate extends RealmObject implements Serializable {
         favTime = 0;
     }
 
+    public Translate(Translate translate) {
+        input = translate.getInput();
+        output = translate.getOutput();
+        fromLang = translate.getFromLang();
+        toLang = translate.getToLang();
+        favTime = translate.getFavTime();
+    }
+
     public String getFromLang() {
         return fromLang;
     }
