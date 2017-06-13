@@ -1,4 +1,4 @@
-package shashov.translate.support;
+package shashov.translate.common;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

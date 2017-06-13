@@ -1,4 +1,4 @@
-package shashov.translate.internals.di.modules;
+package shashov.translate.di.modules;
 
 import android.app.Application;
 import com.google.gson.Gson;

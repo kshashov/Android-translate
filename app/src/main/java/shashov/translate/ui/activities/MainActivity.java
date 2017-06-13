@@ -14,7 +14,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import shashov.translate.R;
 import shashov.translate.TranslateApp;
-import shashov.translate.eventbus.events.OpenTranslateEvent;
+import shashov.translate.common.events.OpenTranslateEvent;
 import shashov.translate.mvp.presenters.MainPresenter;
 import shashov.translate.mvp.views.MainView;
 import shashov.translate.ui.fragments.HistoryFragment;

@@ -4,13 +4,13 @@ import android.app.Application;
 import android.util.Log;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import shashov.translate.internals.di.components.AppComponent;
-import shashov.translate.internals.di.components.DaggerAppComponent;
-import shashov.translate.internals.di.modules.AppModule;
-import shashov.translate.internals.di.modules.DataModule;
-import shashov.translate.internals.di.modules.NetworkModule;
-import shashov.translate.internals.di.modules.TranslateModule;
-import shashov.translate.support.TranslateRealmMigration;
+import shashov.translate.common.TranslateRealmMigration;
+import shashov.translate.di.AppComponent;
+import shashov.translate.di.DaggerAppComponent;
+import shashov.translate.di.modules.AppModule;
+import shashov.translate.di.modules.DataModule;
+import shashov.translate.di.modules.NetworkModule;
+import shashov.translate.di.modules.TranslateModule;
 
 public class TranslateApp extends Application {
 

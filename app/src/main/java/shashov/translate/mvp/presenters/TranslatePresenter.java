@@ -6,16 +6,13 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import shashov.translate.TranslateApp;
-import shashov.translate.dao.Language;
 import shashov.translate.dao.Translate;
-import shashov.translate.internals.mvp.MVP;
-import shashov.translate.internals.mvp.models.HistoryModel;
-import shashov.translate.internals.mvp.models.TranslateModel;
+import shashov.translate.mvp.models.HistoryModel;
 import shashov.translate.mvp.models.LangsModel;
+import shashov.translate.mvp.models.TranslateModel;
 import shashov.translate.mvp.views.TranslateView;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +30,6 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
 
     private State state;
     private Translate currentTranslate;
-    private List<Language> langs;
     private Subscription subscriptionChangeInput;
 
     public TranslatePresenter() {
@@ -44,7 +40,7 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         langsModel.getLangs(
-                langs -> getViewState().populateLangs(this.langs = langs),
+                langs -> getViewState().populateLangs(langs),
                 error -> {
                 }
         );
@@ -70,18 +66,13 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
         }
 
         //load translate
-        translateModel.translate(currentTranslate, new MVP.Model.OnDataLoaded<Translate>() {
-            @Override
-            public void onSuccess(Translate data) {
-                currentTranslate = new Translate(data);
-                onTranslated();
-            }
-
-            @Override
-            public void onFail(String error) {
-                onNoData();
-            }
-        });
+        translateModel.translate(currentTranslate,
+                (data) -> {
+                    currentTranslate = new Translate(data);
+                    onTranslated();
+                }, (error) -> {
+                    onNoData();
+                });
     }
 
     private void onTranslated() {

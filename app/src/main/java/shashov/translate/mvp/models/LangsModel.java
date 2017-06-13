@@ -8,9 +8,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import shashov.translate.R;
+import shashov.translate.common.NetworkManager;
+import shashov.translate.common.YandexAPI;
 import shashov.translate.dao.Language;
-import shashov.translate.networking.YandexAPI;
-import shashov.translate.support.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;

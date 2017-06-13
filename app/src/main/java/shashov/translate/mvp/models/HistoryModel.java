@@ -1,16 +1,16 @@
-package shashov.translate.internals.mvp.models;
+package shashov.translate.mvp.models;
 
+import android.support.annotation.NonNull;
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import shashov.translate.common.TranslateRealmMigration;
 import shashov.translate.dao.Translate;
-import shashov.translate.internals.mvp.MVP;
-import shashov.translate.support.TranslateRealmMigration;
 
 import java.util.Date;
 
-public class HistoryModel implements MVP.Model {
+public class HistoryModel {
     private static final String TAG = HistoryModel.class.getSimpleName();
     private final Realm realm;
 
@@ -30,22 +30,16 @@ public class HistoryModel implements MVP.Model {
     }
 
     /**
-     * Find all translates in realm
+     * Find translates in realm
      */
-    public void getAll(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
-        OrderedRealmCollection<Translate> translates = realm.where(Translate.class).findAllSorted(TranslateRealmMigration.TranslateColumns.TIME, Sort.DESCENDING);
-        onDataLoaded.onSuccess(translates);
-    }
+    public void getHistory(final HistoryDataAction onSuccess) {
+        OrderedRealmCollection<Translate> all = realm.where(Translate.class).findAllSorted(TranslateRealmMigration.TranslateColumns.TIME, Sort.DESCENDING);
 
-    /**
-     * Find favorite translates in realm
-     */
-    public void getFav(final OnDataLoaded<OrderedRealmCollection<Translate>> onDataLoaded) {
-        OrderedRealmCollection<Translate> translates = realm
+        OrderedRealmCollection<Translate> favs = realm
                 .where(Translate.class)
                 .notEqualTo(TranslateRealmMigration.TranslateColumns.FAV_TIME, 0)
                 .findAllSorted(TranslateRealmMigration.TranslateColumns.FAV_TIME, Sort.DESCENDING);
-        onDataLoaded.onSuccess(translates);
+        onSuccess.onSuccess(all, favs);
     }
 
     public void changeFavorite(Translate translate) {
@@ -65,7 +59,7 @@ public class HistoryModel implements MVP.Model {
      * @param translate
      * @return
      */
-    public Translate findTranslate(Translate translate) {
+    public Translate findTranslate(@NonNull Translate translate) {
         RealmResults<Translate> result = realm
                 .where(Translate.class)
                 .equalTo(TranslateRealmMigration.TranslateColumns.INPUT, translate.getInput())
@@ -102,5 +96,9 @@ public class HistoryModel implements MVP.Model {
                 }
             });
         }
+    }
+
+    public interface HistoryDataAction {
+        void onSuccess(OrderedRealmCollection<Translate> all, OrderedRealmCollection<Translate> favs);
     }
 }

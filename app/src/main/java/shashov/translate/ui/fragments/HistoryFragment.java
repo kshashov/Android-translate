@@ -1,10 +1,8 @@
 package shashov.translate.ui.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,87 +13,57 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
 import shashov.translate.dao.Translate;
-import shashov.translate.internals.di.components.AppComponent;
-import shashov.translate.internals.mvp.presenters.HistoryPresenter;
-import shashov.translate.internals.mvp.views.HistoryView;
+import shashov.translate.mvp.presenters.HistoryPresenter;
+import shashov.translate.mvp.views.HistoryView;
 import shashov.translate.ui.adapters.HistorySearchAdapter;
 
-public class HistoryFragment extends BaseFragment<HistoryPresenter> implements HistoryView, HistorySearchAdapter.HistoryListener, SearchView.OnQueryTextListener {
-    public static final String TAG = "HistoryFragment";
-    private static final String SV_TEXT = "svHistoryText";
+/**
+ * Created by kirill on 13.06.17.
+ */
+public class HistoryFragment extends MvpAppCompatFragment implements HistoryView, SearchView.OnQueryTextListener {
     private static final String RV_STATE = "rvHistoryState";
-    private static final String IS_ALL = "isAll";
-    private static final int ALL_TAB = 0;
-    private static final int FAV_TAB = 1;
 
     @BindView(R.id.tl_history)
     TabLayout tlHistory;
-
     @BindView(R.id.pb)
     ProgressBar pb;
-
-    @BindView(R.id.ll_no_data)
-    TextView tvNoData;
-
     @BindView(R.id.rv_history)
     RecyclerView rvHistory;
-
     @BindView(R.id.sv_history)
     SearchView svHistory;
-
     @BindView(R.id.ib_delete)
     ImageButton ibDelete;
 
-    private HistorySearchAdapter adapter;
+    @InjectPresenter
+    HistoryPresenter historyPresenter;
+    private boolean isAll = true;
     private Parcelable rvState;
     private Unbinder unbinder;
-    private boolean isAll = true;
-    private String svHistoryText = "";
+    private HistorySearchAdapter adapter;
 
-    public HistoryFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            if ((savedInstanceState.containsKey(RV_STATE))) {
-                rvState = savedInstanceState.getParcelable(RV_STATE);
-            }
 
-            svHistoryText = savedInstanceState.getString(SV_TEXT, svHistoryText);
-            isAll = savedInstanceState.getBoolean(IS_ALL, isAll);
+        if ((savedInstanceState != null) && savedInstanceState.containsKey(RV_STATE)) {
+            rvState = savedInstanceState.getParcelable(RV_STATE);
         }
+
     }
 
+    @Nullable
     @Override
-    public void onStart() {
-        super.onStart();
-        getPresenter().loadData(isAll);
-    }
-
-    @Override
-    protected void setupComponent(AppComponent appComponent) {
-        appComponent.inject(this);
-    }
-
-    @Override
-    protected HistoryPresenter createPresenter() {
-        return new HistoryPresenter();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -104,13 +72,10 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tlHistory.getTabAt(isAll ? ALL_TAB : FAV_TAB).select();
         tlHistory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                svHistoryText = svHistory.getQuery().toString();
-                isAll = (tab.getPosition() == ALL_TAB);
-                getPresenter().loadData(isAll);
+                historyPresenter.onChangeTab(isAll = (tab.getPosition() == 0));
             }
 
             @Override
@@ -121,102 +86,61 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        svHistory.setOnQueryTextListener(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        rvState = rvHistory.getLayoutManager().onSaveInstanceState();
-        svHistoryText = svHistory.getQuery().toString();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void showLoading() {
-        pb.setVisibility(View.VISIBLE);
-        tvNoData.setVisibility(View.INVISIBLE);
-        svHistory.setVisibility(View.INVISIBLE);
-        rvHistory.setVisibility(View.INVISIBLE);
-        tlHistory.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void showError(String error) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), error, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showContent() {
+    public void showContent(OrderedRealmCollection<Translate> data) {
         pb.setVisibility(View.INVISIBLE);
-        tvNoData.setVisibility(View.INVISIBLE);
         rvHistory.setVisibility(View.VISIBLE);
-        svHistory.setVisibility(View.VISIBLE);
-        tlHistory.setVisibility(View.VISIBLE);
-    }
 
-    @Override
-    public void showEmpty() {
-        pb.setVisibility(View.INVISIBLE);
-        tvNoData.setVisibility(View.VISIBLE);
-        rvHistory.setVisibility(View.INVISIBLE);
-        svHistory.setVisibility(View.INVISIBLE);
-        tlHistory.setVisibility(View.INVISIBLE);
-    }
 
-    @Override
-    public void populateList(OrderedRealmCollection<Translate> data) {
-        //add loaded data and restore last state
-        adapter = new HistorySearchAdapter(getContext(), data, this);
+        adapter = new HistorySearchAdapter(getContext(), data, historyPresenter);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
-        svHistory.setOnQueryTextListener(this);
-        svHistory.setQuery(svHistoryText, true);
-        //adapter.filter(svHistoryText);
+
         if (rvState != null) {
             rvHistory.getLayoutManager().onRestoreInstanceState(rvState);
+        }
+        if (svHistory.getQuery() != null) {
+            adapter.filter(svHistory.getQuery().toString());
         }
     }
 
     @Override
-    public void showDeleteDialog(String question) {
+    public void showLoadingContent() {
+        pb.setVisibility(View.VISIBLE); //TODO disable all
+        rvHistory.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showDeleteDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setMessage(question)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        getPresenter().deleteHistory(isAll);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
+                .setMessage("test") //TODO pass message
+                .setPositiveButton(android.R.string.yes, (dialog1, which) -> historyPresenter.deleteCloseDeleteDialog(true))
+                .setNegativeButton(android.R.string.no, (dialog1, which) -> historyPresenter.deleteCloseDeleteDialog(false))
                 .create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
-            }
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
         });
         dialog.show();
     }
 
     @Override
-    public void onClickItem(Translate translate) {
-        getPresenter().onClickTranslate(translate);
+    public void restoreState(HistoryViewState viewState) {
+        isAll = viewState.isAllTab;
+        tlHistory.getTabAt(viewState.isAllTab ? 0 : 1).select();
+        svHistory.setQuery(viewState.searchString, true);
     }
 
     @Override
-    public void onChangeFavorite(Translate translate) {
-        getPresenter().onChangeFavorite(translate);
+    public void onPause() {
+        super.onPause();
+        if (rvHistory.getLayoutManager() != null) {
+            rvState = rvHistory.getLayoutManager().onSaveInstanceState();
+        }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -224,14 +148,16 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
         if (rvState != null) {
             outState.putParcelable(RV_STATE, rvState);
         }
+    }
 
-        outState.putString(SV_TEXT, svHistoryText);
-        outState.putBoolean(IS_ALL, isAll);
+    @OnClick(R.id.ib_delete)
+    public void onDeleteClick() {
+        historyPresenter.onDeleteHistory();
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        adapter.filter(query);
+    public boolean onQueryTextSubmit(String newText) {
+        onQueryChanged(newText);
         svHistory.setIconified(false);
         svHistory.clearFocus();
         return false;
@@ -239,12 +165,20 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements H
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        adapter.filter(newText);
+        onQueryChanged(newText);
         return false;
     }
 
-    @OnClick(R.id.ib_delete)
-    public void onDeleteClick() {
-        getPresenter().onDeleteHistory(isAll);
+    private void onQueryChanged(String newText) {
+        if (adapter != null) {
+            adapter.filter(newText);
+        }
+        historyPresenter.saveSearchText(newText);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

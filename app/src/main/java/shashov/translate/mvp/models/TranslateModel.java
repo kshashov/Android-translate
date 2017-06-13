@@ -1,4 +1,4 @@
-package shashov.translate.internals.mvp.models;
+package shashov.translate.mvp.models;
 
 import android.content.res.Resources;
 import android.util.Log;
@@ -7,17 +7,17 @@ import io.realm.Realm;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import shashov.translate.R;
+import shashov.translate.common.NetworkManager;
+import shashov.translate.common.YandexAPI;
 import shashov.translate.dao.Translate;
-import shashov.translate.internals.mvp.MVP;
-import shashov.translate.networking.YandexAPI;
-import shashov.translate.support.NetworkManager;
 
 import java.util.Date;
 import java.util.List;
 
-public class TranslateModel implements MVP.Model {
+public class TranslateModel {
     private static final String TAG = TranslateModel.class.getSimpleName();
     private final YandexAPI yandexAPI;
     private final NetworkManager networkManager;
@@ -34,19 +34,19 @@ public class TranslateModel implements MVP.Model {
         this.resources = resources;
     }
 
-    public void translate(final Translate translate, final OnDataLoaded<Translate> onDataLoaded) {
+    public void translate(final Translate translate, final Action1<? super Translate> onSuccess, final Action1<String> onError) {
         //search translate in realm
         Translate savedTranslate = historyModel.findTranslate(translate);
         if (savedTranslate != null) {
             realm.beginTransaction();
             savedTranslate.setTime((new Date()).getTime());
             realm.commitTransaction();
-            onDataLoaded.onSuccess(savedTranslate);
+            onSuccess.call(savedTranslate);
             return;
         }
         //get translate from api
         if (!networkManager.isConnected()) {
-            onDataLoaded.onFail(resources.getString(R.string.no_internet));
+            onError.call(resources.getString(R.string.no_internet));
         } else {
             observable = yandexAPI.translate(YandexAPI.API_CODE, translate.getFromLang() + "-" + translate.getToLang(), translate.getInput())
                     .subscribeOn(Schedulers.newThread())
@@ -59,7 +59,7 @@ public class TranslateModel implements MVP.Model {
                                    @Override
                                    public void onError(Throwable e) {
                                        Log.d(TAG, "onError() called with: " + "e = [" + e + "]");
-                                       onDataLoaded.onFail(resources.getString(R.string.wtf_error));
+                                       onError.call(resources.getString(R.string.wtf_error));
                                    }
 
                                    @Override
@@ -67,7 +67,7 @@ public class TranslateModel implements MVP.Model {
                                        Log.d(TAG, "onNext() called with: " + "translateResponse = ["
                                                + translateResponse + "]");
                                        if ((translateResponse.getCode() == null) || !translateResponse.getCode().equals("200")) {
-                                           onDataLoaded.onFail(resources.getString(R.string.wtf_error));
+                                           onError.call(resources.getString(R.string.wtf_error));
                                            return;
                                        }
                                        if (!translateResponse.getTextList().isEmpty()) {
@@ -76,7 +76,7 @@ public class TranslateModel implements MVP.Model {
                                            translate.setOutput("");
                                        }
                                        cache(translate);
-                                       onDataLoaded.onSuccess(historyModel.findTranslate(translate));
+                                       onSuccess.call(historyModel.findTranslate(translate));
                                    }
                                }
                     );

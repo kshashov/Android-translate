@@ -1,4 +1,4 @@
-package shashov.translate.support;
+package shashov.translate.common;
 
 import io.realm.DynamicRealm;
 import io.realm.RealmMigration;

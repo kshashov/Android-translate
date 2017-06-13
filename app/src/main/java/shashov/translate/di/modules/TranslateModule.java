@@ -1,14 +1,14 @@
-package shashov.translate.internals.di.modules;
+package shashov.translate.di.modules;
 
 import android.content.res.Resources;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
-import shashov.translate.internals.mvp.models.HistoryModel;
-import shashov.translate.internals.mvp.models.TranslateModel;
+import shashov.translate.common.NetworkManager;
+import shashov.translate.common.YandexAPI;
+import shashov.translate.mvp.models.HistoryModel;
 import shashov.translate.mvp.models.LangsModel;
-import shashov.translate.networking.YandexAPI;
-import shashov.translate.support.NetworkManager;
+import shashov.translate.mvp.models.TranslateModel;
 
 import javax.inject.Singleton;
 

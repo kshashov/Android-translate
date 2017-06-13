@@ -14,8 +14,8 @@ import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import io.realm.Case;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
+import shashov.translate.common.TranslateRealmMigration;
 import shashov.translate.dao.Translate;
-import shashov.translate.support.TranslateRealmMigration;
 import xyz.projectplay.realmsearchadapter.RealmSearchAdapter;
 
 public class HistorySearchAdapter extends RealmSearchAdapter {

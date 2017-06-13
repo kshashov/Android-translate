@@ -1,10 +1,10 @@
-package shashov.translate.networking;
+package shashov.translate.common;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
-import shashov.translate.internals.mvp.models.TranslateModel;
 import shashov.translate.mvp.models.LangsModel;
+import shashov.translate.mvp.models.TranslateModel;
 
 public interface YandexAPI {
     String API_CODE = "trnsl.1.1.20170323T143109Z.c8f429d90accb2d0.572caaaaaa40c3400aa6e4ec5d5ebc95364c7987";

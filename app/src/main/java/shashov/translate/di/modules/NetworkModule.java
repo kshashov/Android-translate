@@ -1,4 +1,4 @@
-package shashov.translate.internals.di.modules;
+package shashov.translate.di.modules;
 
 import android.content.Context;
 import dagger.Module;
@@ -6,8 +6,8 @@ import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import shashov.translate.networking.YandexAPI;
-import shashov.translate.support.NetworkManager;
+import shashov.translate.common.NetworkManager;
+import shashov.translate.common.YandexAPI;
 
 import javax.inject.Singleton;
 

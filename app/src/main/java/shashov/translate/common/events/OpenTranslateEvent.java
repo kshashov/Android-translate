@@ -1,4 +1,4 @@
-package shashov.translate.eventbus.events;
+package shashov.translate.common.events;
 
 import shashov.translate.dao.Translate;
 
