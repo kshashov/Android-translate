@@ -5,13 +5,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/bgHistory">
 
-    <ProgressBar
-        android:id="@+id/pb"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"/>
-
     <RelativeLayout
         android:id="@+id/rl_head"
         android:layout_width="match_parent"
@@ -43,8 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:padding="@dimen/paddingSmall"
+            android:contentDescription="@string/remove"
             android:background="@null"
             android:src="@mipmap/ic_delete_forever_black_24dp"/>
     </RelativeLayout>
@@ -62,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/sv_history"
-        android:background="@color/borderShapeColor"></View>
+        android:background="@color/borderShapeColor"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"

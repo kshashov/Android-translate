@@ -2,6 +2,7 @@ package shashov.translate.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
@@ -11,14 +12,13 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.R;
 import shashov.translate.dao.Translate;
@@ -26,40 +26,22 @@ import shashov.translate.mvp.presenters.HistoryPresenter;
 import shashov.translate.mvp.views.HistoryView;
 import shashov.translate.ui.adapters.HistorySearchAdapter;
 
-/**
- * Created by kirill on 13.06.17.
- */
-public class HistoryFragment extends MvpAppCompatFragment implements HistoryView, SearchView.OnQueryTextListener {
-    private static final String RV_STATE = "rvHistoryState";
+public class HistoryFragment extends MvpAppCompatFragment implements HistoryView, SearchView.OnQueryTextListener, TabLayout.OnTabSelectedListener {
 
     @BindView(R.id.tl_history)
     TabLayout tlHistory;
-    @BindView(R.id.pb)
-    ProgressBar pb;
     @BindView(R.id.rv_history)
     RecyclerView rvHistory;
     @BindView(R.id.sv_history)
     SearchView svHistory;
-    @BindView(R.id.ib_delete)
-    ImageButton ibDelete;
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL)
     HistoryPresenter historyPresenter;
-    private boolean isAll = true;
     private Parcelable rvState;
     private Unbinder unbinder;
     private HistorySearchAdapter adapter;
+    private AlertDialog dialog;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if ((savedInstanceState != null) && savedInstanceState.containsKey(RV_STATE)) {
-            rvState = savedInstanceState.getParcelable(RV_STATE);
-        }
-
-    }
 
     @Nullable
     @Override
@@ -70,68 +52,94 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tlHistory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                historyPresenter.onChangeTab(isAll = (tab.getPosition() == 0));
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-        svHistory.setOnQueryTextListener(this);
-    }
-
-    @Override
-    public void showContent(OrderedRealmCollection<Translate> data) {
-        pb.setVisibility(View.INVISIBLE);
-        rvHistory.setVisibility(View.VISIBLE);
-
+    public void showContent(boolean isAll, @NonNull OrderedRealmCollection<Translate> data) {
+        tlHistory.removeOnTabSelectedListener(this);
+        tlHistory.getTabAt(isAll ? 0 : 1).select();
+        tlHistory.addOnTabSelectedListener(this);
 
         adapter = new HistorySearchAdapter(getContext(), data, historyPresenter);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvHistory.setAdapter(adapter);
-
-        if (rvState != null) {
-            rvHistory.getLayoutManager().onRestoreInstanceState(rvState);
-        }
-        if (svHistory.getQuery() != null) {
-            adapter.filter(svHistory.getQuery().toString());
-        }
-    }
-
-    @Override
-    public void showLoadingContent() {
-        pb.setVisibility(View.VISIBLE); //TODO disable all
-        rvHistory.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showDeleteDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setMessage("test") //TODO pass message
-                .setPositiveButton(android.R.string.yes, (dialog1, which) -> historyPresenter.deleteCloseDeleteDialog(true))
-                .setNegativeButton(android.R.string.no, (dialog1, which) -> historyPresenter.deleteCloseDeleteDialog(false))
+        dialog = new AlertDialog.Builder(getContext())
+                .setMessage(getResources().getString(R.string.deleteAll)) //TODO pass message
+                .setPositiveButton(android.R.string.yes,
+                        (dialog1, which) -> historyPresenter.onPositiveCloseDeleteDialog(tlHistory.getSelectedTabPosition() == 0))
+                .setNegativeButton(android.R.string.no, (dialog1, which) -> historyPresenter.onNegativeCloseDeleteDialog())
+                // .setOnDismissListener((dialog1) -> historyPresenter.onNegativeCloseDeleteDialog())
+                .setOnCancelListener((dialog1) -> historyPresenter.onNegativeCloseDeleteDialog())
                 .create();
         dialog.setOnShowListener(dialogInterface -> {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getActivity().getResources().getColor(R.color.black));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.black));
         });
         dialog.show();
     }
 
     @Override
-    public void restoreState(HistoryViewState viewState) {
-        isAll = viewState.isAllTab;
-        tlHistory.getTabAt(viewState.isAllTab ? 0 : 1).select();
-        svHistory.setQuery(viewState.searchString, true);
+    public void setRVState(Parcelable rvState) {
+        if (rvState != null) {
+            rvHistory.getLayoutManager().onRestoreInstanceState(rvState);
+        }
+    }
+
+    @Override
+    public void closeSearchViewFocus() {
+        svHistory.setIconified((svHistory.getQuery() == null) || svHistory.getQuery().toString().isEmpty());
+        svHistory.clearFocus();
+    }
+
+    @Override
+    public void closeDeleteDialog() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public void search(@NonNull String newText) {
+        svHistory.setOnQueryTextListener(null);
+        svHistory.setQuery(newText, true);
+        svHistory.setOnQueryTextListener(this);
+
+        if (adapter != null) {
+            adapter.filter(newText);
+        }
+    }
+
+    @OnClick(R.id.ib_delete)
+    void onDeleteClick() {
+        historyPresenter.onDeleteHistory();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String newText) {
+        historyPresenter.onChangeSearchText(newText);
+        svHistory.setIconified(false);
+        svHistory.clearFocus();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        historyPresenter.onChangeSearchText(newText);
+        return false;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        historyPresenter.onChangeTab(tab.getPosition() == 0);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 
     @Override
@@ -143,42 +151,12 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (rvState != null) {
-            outState.putParcelable(RV_STATE, rvState);
-        }
-    }
-
-    @OnClick(R.id.ib_delete)
-    public void onDeleteClick() {
-        historyPresenter.onDeleteHistory();
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String newText) {
-        onQueryChanged(newText);
-        svHistory.setIconified(false);
-        svHistory.clearFocus();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        onQueryChanged(newText);
-        return false;
-    }
-
-    private void onQueryChanged(String newText) {
-        if (adapter != null) {
-            adapter.filter(newText);
-        }
-        historyPresenter.saveSearchText(newText);
-    }
-
-    @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
         unbinder.unbind();
+        historyPresenter.saveRVState(rvState);
+        super.onDestroyView();
     }
 }

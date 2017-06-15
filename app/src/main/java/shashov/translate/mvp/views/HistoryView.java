@@ -1,25 +1,28 @@
 package shashov.translate.mvp.views;
 
+import android.os.Parcelable;
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import io.realm.OrderedRealmCollection;
 import shashov.translate.dao.Translate;
 
-/**
- * Created by kirill on 13.06.17.
- */
+@StateStrategyType(AddToEndSingleStrategy.class)
 public interface HistoryView extends MvpView {
-    public static final String TAG = "HistoryFragment";
+    void showContent(boolean isAll, OrderedRealmCollection<Translate> data);
 
-    void showContent(OrderedRealmCollection<Translate> data);
+    void search(String newText);
 
-    void showLoadingContent();
-
+    @StateStrategyType(SkipStrategy.class)
     void showDeleteDialog();
 
-    void restoreState(HistoryViewState viewState);
+    @StateStrategyType(SkipStrategy.class)
+    void closeDeleteDialog();
 
-    class HistoryViewState {
-        public String searchString = "";
-        public boolean isAllTab = true;
-    }
+    @StateStrategyType(SkipStrategy.class)
+    void setRVState(Parcelable rvState);
+
+    @StateStrategyType(SkipStrategy.class)
+    void closeSearchViewFocus();
 }

@@ -18,6 +18,9 @@ public class HistoryModel {
         this.realm = realm;
     }
 
+    /**
+     * Find translate which max time
+     */
     public Translate getLast() {
         RealmResults<Translate> result = realm
                 .where(Translate.class)
@@ -32,7 +35,7 @@ public class HistoryModel {
     /**
      * Find translates in realm
      */
-    public void getHistory(final HistoryDataAction onSuccess) {
+    public void getHistory(@NonNull HistoryDataAction onSuccess) {
         OrderedRealmCollection<Translate> all = realm.where(Translate.class).findAllSorted(TranslateRealmMigration.TranslateColumns.TIME, Sort.DESCENDING);
 
         OrderedRealmCollection<Translate> favs = realm
@@ -42,7 +45,10 @@ public class HistoryModel {
         onSuccess.onSuccess(all, favs);
     }
 
-    public void changeFavorite(Translate translate) {
+    /**
+     * Change fav attribute for translate
+     */
+    public void changeFavorite(@NonNull Translate translate) {
         Translate savedTranslate = findTranslate(translate);
         if (savedTranslate == null) {
             return;
@@ -55,9 +61,6 @@ public class HistoryModel {
 
     /**
      * Find same translate in realm
-     *
-     * @param translate
-     * @return
      */
     public Translate findTranslate(@NonNull Translate translate) {
         RealmResults<Translate> result = realm
@@ -74,28 +77,39 @@ public class HistoryModel {
 
     /**
      * Delete Translate items from history all favorite list
-     *
-     * @param items
-     * @param isAll false if delete only favorite status
+     * @param isAll false = delete only favorite status
      */
-    public void delete(final OrderedRealmCollection<Translate> items, boolean isAll) {
+    public void delete(@NonNull OrderedRealmCollection<Translate> items, boolean isAll) {
         if (isAll) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    items.deleteAllFromRealm();
-                }
-            });
+            realm.executeTransaction((Realm realm) -> items.deleteAllFromRealm());
         } else {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    for (Translate translate : items) {
-                        translate.setFavTime(0);
-                    }
+            realm.executeTransaction((Realm realm) -> {
+                for (Translate translate : items) {
+                    translate.setFavTime(0);
                 }
             });
         }
+    }
+
+    /**
+     * Add translate to realm or update time attr
+     */
+    public Translate saveTranslate(@NonNull Translate translate) {
+        Translate result = findTranslate(translate);
+        realm.beginTransaction();
+
+        //for new translate
+        if (result == null) {
+            result = translate;
+            result.setFavTime(0);
+            result.setTime((new Date()).getTime());
+            realm.copyToRealm(result);
+        }
+
+        //update time
+        result.setTime((new Date()).getTime());
+        realm.commitTransaction();
+        return result;
     }
 
     public interface HistoryDataAction {

@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
-import shashov.translate.common.NetworkManager;
 import shashov.translate.common.YandexAPI;
 import shashov.translate.mvp.models.HistoryModel;
 import shashov.translate.mvp.models.LangsModel;
@@ -17,14 +16,14 @@ public class TranslateModule {
 
     @Provides
     @Singleton
-    LangsModel provideLangsModel(Resources resources, YandexAPI yandexAPI, NetworkManager networkManager) {
+    LangsModel provideLangsModel(Resources resources, YandexAPI yandexAPI, NetworkModule.NetworkManager networkManager) {
         return new LangsModel(resources, yandexAPI, networkManager);
     }
 
     @Provides
     @Singleton
-    TranslateModel provideTranslateModel(Resources resources, HistoryModel historyModel, YandexAPI yandexAPI, Realm realm, NetworkManager networkManager) {
-        return new TranslateModel(resources, historyModel, yandexAPI, realm, networkManager);
+    TranslateModel provideTranslateModel(HistoryModel historyModel, Resources resources, YandexAPI yandexAPI, NetworkModule.NetworkManager networkManager) {
+        return new TranslateModel(historyModel, resources, yandexAPI, networkManager);
     }
 
     @Provides

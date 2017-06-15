@@ -13,7 +13,6 @@ import shashov.translate.di.modules.NetworkModule;
 import shashov.translate.di.modules.TranslateModule;
 
 public class TranslateApp extends Application {
-
     private static AppComponent appComponent;
 
     @Override

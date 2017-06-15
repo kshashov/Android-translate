@@ -1,6 +1,9 @@
 package shashov.translate.mvp.presenters;
 
+import android.support.annotation.NonNull;
 import com.arellomobile.mvp.InjectViewState;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -15,9 +18,6 @@ import shashov.translate.mvp.views.TranslateView;
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by kirill on 11.06.17.
- */
 @InjectViewState
 public class TranslatePresenter extends BasePresenter<TranslateView> {
 
@@ -27,87 +27,84 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
     TranslateModel translateModel;
     @Inject
     HistoryModel historyModel;
+    @Inject
+    Bus eventBus;
 
-    private State state;
     private Translate currentTranslate;
     private Subscription subscriptionChangeInput;
+    private Subscription subscription;
 
     public TranslatePresenter() {
         TranslateApp.getAppComponent().inject(this);
+        eventBus.register(this);
+        //init current translate state
+        currentTranslate = historyModel.getLast();
+        if (currentTranslate == null) {
+            currentTranslate = new Translate();
+        }
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        //load languages list
         langsModel.getLangs(
                 langs -> getViewState().populateLangs(langs),
                 error -> {
                 }
         );
 
-        currentTranslate = historyModel.getLast();
-        if (currentTranslate == null) {
-            currentTranslate = new Translate();
-        }
-
         loadData();
-    }
-
-    private void loadData() {
-        translateModel.unsubscribe();
-
-        onLoading();
-
-        //empty request
-        if (currentTranslate.getInput().isEmpty()) {
-            currentTranslate.setOutput("");
-            onTranslated();
-            return;
-        }
-
-        //load translate
-        translateModel.translate(currentTranslate,
-                (data) -> {
-                    currentTranslate = new Translate(data);
-                    onTranslated();
-                }, (error) -> {
-                    onNoData();
-                });
-    }
-
-    private void onTranslated() {
-        getViewState().showTranslate(currentTranslate);
-        state = State.TRANSLATED;
-    }
-
-    private void onLoading() {
-        state = State.LOADING;
-        getViewState().showLoading();
-    }
-
-    private void onNoData() {
-        state = State.NO_DATA;
-        getViewState().showNoData();
     }
 
     @Override
     public void attachView(TranslateView view) {
         super.attachView(view);
-
         //update state for saved translate (for example, fav status)
         Translate translate = historyModel.findTranslate(currentTranslate);
         if (translate != null) {
             currentTranslate = new Translate(translate);
         }
 
-        //restore view state
-        if (state == State.LOADING) {
-            onLoading();
-        } else if (state == State.NO_DATA) {
-            onNoData();
-        } else if (state == State.TRANSLATED) {
-            onTranslated();
+        if ((subscription == null) || subscription.isUnsubscribed()) {
+            loadData();
         }
+    }
+
+    /**
+     * load translate from model for current translate state
+     */
+    private void loadData() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+
+        getViewState().showLoading();
+
+        //empty request
+        if (currentTranslate.getInput().isEmpty()) {
+            currentTranslate.setOutput("");
+            getViewState().showTranslate(currentTranslate);
+            return;
+        }
+
+        //load translate
+        subscription = translateModel.translate(currentTranslate,
+                (data) -> getViewState().showTranslate(currentTranslate = new Translate(data)),
+                (error) -> getViewState().showNoData());
+
+        if (subscription != null) {
+            unsubscribeOnDestroy(subscription);
+        }
+    }
+
+    @Subscribe
+    public void openTranslate(OpenTranslateEvent setTranslateEvent) {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        currentTranslate = setTranslateEvent.translate;
+        eventBus.post(new MainPresenter.OpenTranslateEvent());
     }
 
     public void onChangeFavorite() {
@@ -158,7 +155,9 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
 
         currentTranslate.setInput(input);
 
-        if (isDelay) {
+        if (!isDelay) {
+            loadData();
+        } else {
             subscriptionChangeInput = Observable
                     .just(input)
                     .delay(1250, TimeUnit.MILLISECONDS)
@@ -166,15 +165,14 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(inputText -> loadData());
             unsubscribeOnDestroy(subscriptionChangeInput);
-        } else {
-            loadData();
         }
     }
 
+    static class OpenTranslateEvent {
+        public Translate translate;
 
-    enum State {
-        LOADING,
-        NO_DATA,
-        TRANSLATED
+        OpenTranslateEvent(@NonNull Translate translate) {
+            this.translate = translate;
+        }
     }
 }

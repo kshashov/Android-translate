@@ -12,7 +12,7 @@
     <string name="reload">Обновить</string>
     <string name="all">История</string>
     <string name="favorites">Избранное</string>
-    <string name="deleteAll">Удалить всю историю переводов?</string>
-    <string name="deleteFav">Удалит все переводы из избранного?</string>
+    <string name="deleteAll">Удалить историю переводов?</string>
     <string name="wtf_error">Произошла непредвиденная ошибка</string>
+    <string name="remove">Удалить</string>
 </resources>

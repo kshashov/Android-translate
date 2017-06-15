@@ -14,11 +14,7 @@ import shashov.translate.R;
 import shashov.translate.mvp.presenters.SplashPresenter;
 import shashov.translate.mvp.views.SplashView;
 
-/**
- * Created by kirill on 10.06.17.
- */
 public class SplashActivity extends MvpAppCompatActivity implements SplashView {
-    public static final String LANGS_KEY = "langs";
     @BindView(R.id.progress)
     SpinKitView progress;
     @BindView(R.id.ll_loading)
@@ -49,18 +45,18 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
         llLoading.setVisibility(View.INVISIBLE);
     }
 
-    @OnClick(R.id.btn_reload)
-    public void onClickReload() {
-        splashPresenter.loadData();
-    }
-
     @Override
     public void showApp() {
         startActivity(new Intent(this, MainActivity.class));
     }
 
     @OnClick(R.id.btn_reload)
-    public void onReload() {
+    void onClickReload() {
+        splashPresenter.loadData();
+    }
+
+    @OnClick(R.id.btn_reload)
+    void onReload() {
         splashPresenter.loadData();
     }
 }

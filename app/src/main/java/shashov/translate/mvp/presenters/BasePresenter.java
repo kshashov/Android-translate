@@ -6,9 +6,6 @@ import com.arellomobile.mvp.MvpView;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by kirill on 10.06.17.
- */
 public class BasePresenter<View extends MvpView> extends MvpPresenter<View> {
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
 

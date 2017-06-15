@@ -1,5 +1,6 @@
 package shashov.translate.dao;
 
+import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class Translate extends RealmObject implements Serializable {
         favTime = 0;
     }
 
-    public Translate(Translate translate) {
+    public Translate(@NonNull Translate translate) {
         input = translate.getInput();
         output = translate.getOutput();
         fromLang = translate.getFromLang();

@@ -1,6 +1,7 @@
 package shashov.translate.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,10 +26,7 @@ import shashov.translate.ui.adapters.LanguageSpinnerAdapter;
 
 import java.util.List;
 
-/**
- * Created by kirill on 11.06.17.
- */
-public class TranslateFragment extends MvpAppCompatFragment implements TranslateView {
+public class TranslateFragment extends MvpAppCompatFragment implements TranslateView, TextWatcher {
     public static final String TAG = "TranslateFragment";
 
     @BindView(R.id.pb_output)
@@ -93,7 +91,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     }
 
     @Override
-    public void populateLangs(List<Language> langs) {
+    public void populateLangs(@NonNull List<Language> langs) {
         spInputLang.setAdapter(new LanguageSpinnerAdapter(getContext()));
         spOutputLang.setAdapter(new LanguageSpinnerAdapter(getContext()));
         ((LanguageSpinnerAdapter) spInputLang.getAdapter()).addItems(langs);
@@ -101,18 +99,18 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     }
 
     @OnClick(R.id.translate_favorite)
-    public void onClickFav() {
+    void onClickFav() {
         translatePresenter.onChangeFavorite();
         mfbFav.toggleFavorite();
     }
 
     @OnClick(R.id.btn_reload_translate)
-    public void onClickReloadTranslate() {
+    void onClickReloadTranslate() {
         translatePresenter.onReloadTranslate();
     }
 
     @OnClick(R.id.ib_swap)
-    public void onClickSwapLangs() {
+    void onClickSwapLangs() {
         if (spInputLang.getSelectedItemPosition() == spOutputLang.getSelectedItemPosition()) {
             return;
         }
@@ -121,7 +119,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     }
 
     @OnClick(R.id.img_clear)
-    public void onClickClearInput() {
+    void onClickClearInput() {
         translatePresenter.onClearInput();
     }
 
@@ -129,28 +127,14 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         etInputText.setHorizontallyScrolling(false);
         etInputText.setLines(4);
         etInputText.setPadding(etInputText.getPaddingLeft(), etInputText.getPaddingTop(), imgClear.getDrawable().getIntrinsicWidth(), etInputText.getPaddingBottom());
-        etInputText.addTextChangedListener(
-                new TextWatcher() {
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(final Editable s) {
-                        translatePresenter.onChangeInput(s.toString());
-                    }
-                }
-        );
     }
 
-    private void setupTranslate(Translate translate) {
+    private void setupTranslate(@NonNull Translate translate) {
         tv_outputText.setText(translate.getOutput());
         mfbFav.setFavorite(translate.isFavorite(), false);
+        etInputText.removeTextChangedListener(this);
         etInputText.setText(translate.getInput());
+        etInputText.addTextChangedListener(this);
 
         mfbFav.setVisibility(translate.getOutput().isEmpty() ? View.INVISIBLE : View.VISIBLE);
         imgClear.setVisibility(translate.getInput().isEmpty() ? View.INVISIBLE : View.VISIBLE);
@@ -160,7 +144,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         setupLang(false, translate.getToLang());
     }
 
-    private void setupLang(boolean isInput, String langCode) {
+    private void setupLang(boolean isInput, @NonNull String langCode) {
         Spinner spinner = isInput ? spInputLang : spOutputLang;
         int langPosition = ((LanguageSpinnerAdapter) spinner.getAdapter()).getPosition(langCode);
         if (spinner.getSelectedItemPosition() == langPosition) {
@@ -178,6 +162,19 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        translatePresenter.onChangeInput(s.toString());
     }
 
     @Override

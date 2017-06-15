@@ -1,6 +1,7 @@
 package shashov.translate.ui.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 import shashov.translate.R;
 import shashov.translate.dao.Language;
@@ -11,11 +12,11 @@ import java.util.List;
 public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
     private List<Language> langs = new ArrayList<>();
 
-    public LanguageSpinnerAdapter(Context context) {
+    public LanguageSpinnerAdapter(@NonNull Context context) {
         super(context, R.layout.lang_spinner_item);
     }
 
-    public void addItems(List<Language> items) {
+    public void addItems(@NonNull List<Language> items) {
         langs.addAll(items);
         String[] languages = new String[items.size()];
         for (int i = 0; i < items.size(); i++) {
@@ -34,7 +35,7 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
         return null;
     }
 
-    public int getPosition(String langCode) {
+    public int getPosition(@NonNull String langCode) {
         for (int i = 0; i < langs.size(); i++) {
             if (langs.get(i).getCode().equals(langCode)) {
                 return i;
