@@ -51,7 +51,7 @@
             android:id="@+id/language_panel"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/bgActionBar"
             android:paddingBottom="@dimen/paddingNormal"
             android:paddingTop="@dimen/paddingNormal"
@@ -164,10 +164,6 @@
                     android:textColor="@color/black"
                     app:timeout="500"/>
 
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/loading"/>-->
             </LinearLayout>
 
             <include layout="@layout/no_data"/>

@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,8 +102,12 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
 
     @Override
     public void search(@NonNull String newText) {
-        svHistory.setOnQueryTextListener(null);
-        svHistory.setQuery(newText, true);
+        if (!svHistory.getQuery().toString().trim().equals(newText.trim())) {
+            svHistory.setOnQueryTextListener(null);
+            svHistory.setQuery(newText, true);
+        }
+
+        Log.d("INIT", "search: [" + svHistory.getQuery().toString().trim() + "] - [" + newText.trim() + "]");
         svHistory.setOnQueryTextListener(this);
 
         if (adapter != null) {
@@ -117,7 +122,7 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
 
     @Override
     public boolean onQueryTextSubmit(String newText) {
-        historyPresenter.onChangeSearchText(newText);
+        historyPresenter.onChangeSearchText(newText.trim());
         svHistory.setIconified(false);
         svHistory.clearFocus();
         return false;
@@ -125,7 +130,7 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        historyPresenter.onChangeSearchText(newText);
+        historyPresenter.onChangeSearchText(newText.trim());
         return false;
     }
 

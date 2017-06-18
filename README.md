@@ -3,7 +3,7 @@
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/envoy93/Android-translate/master/LICENSE)
 
 # Android-translate
-Клиент API Яндекс.Переводчика под Android для [Школа мобильной разработки](https://academy.yandex.ru/events/mobdev/msk-2017/)
+Примитивный клиент API Яндекс.Переводчика под Android. Изначально был написан для [Школа мобильной разработки](https://academy.yandex.ru/events/mobdev/msk-2017/)
 
 
 <img src="https://github.com/envoy93/Android-translate/blob/master/img/1.png" width="250">

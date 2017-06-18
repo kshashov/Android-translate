@@ -158,10 +158,9 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         if (!translate.getInput().equals(etInputText.getText().toString().trim())) {
             etInputText.removeTextChangedListener(this);
             etInputText.setText(translate.getInput());
-            etInputText.addTextChangedListener(this);
             Log.d(TAG, "input = [" + translate.getInput() + "," + etInputText.getText().toString().trim() + "]");
         }
-
+        etInputText.addTextChangedListener(this);
         //langs
         setupLang(true, translate.getFromLang());
         setupLang(false, translate.getToLang());

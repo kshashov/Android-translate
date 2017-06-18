@@ -44,9 +44,7 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
         //init current translate state
         currentTranslate = historyModel.getLast();
         if (currentTranslate == null) {
-            currentTranslate = new Translate();
-            currentTranslate.setFromLang(resources.getString(R.string.lang_code));
-            currentTranslate.setToLang(resources.getString(R.string.lang_code));
+            createEmptyTranslate();
         }
     }
 
@@ -176,6 +174,12 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
 
     public void onCloseTranslateFullScreen() {
         getViewState().showTranslate(currentTranslate);
+    }
+
+    private void createEmptyTranslate() {
+        currentTranslate = new Translate();
+        currentTranslate.setFromLang(resources.getString(R.string.lang_code));
+        currentTranslate.setToLang(resources.getString(R.string.lang_code));
     }
 
     static class OpenTranslateEvent {

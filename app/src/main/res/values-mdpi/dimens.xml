@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="baseTextSize">16sp</dimen>
+    <dimen name="baseTextSizeSmall">14sp</dimen>
     <dimen name="baseTextSizeBig">22sp</dimen>
     <dimen name="translateTextSizeBig">150sp</dimen>
     <dimen name="inputTextSize">18sp</dimen>
 
-    <dimen name="paddingSmall">2dp</dimen>
     <dimen name="paddingNormal">5dp</dimen>
     <dimen name="paddingBig">10dp</dimen>
 </resources>

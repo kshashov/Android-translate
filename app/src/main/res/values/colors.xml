@@ -33,7 +33,7 @@
     <color name="textCaption">@color/gray</color>
     <color name="bgHistoryItem">@color/white</color>
     <color name="bgHistory">@color/white</color>
-    <color name="bgActionBar">@color/colorAccent</color>
+    <color name="bgActionBar">#ecf0f1</color>
     <color name="textActionBar">@color/black</color>
     <color name="bgTranslateFragment">#ecf0f1</color>
     <color name="bgTranslatedFullscreen">@color/white</color>

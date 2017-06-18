@@ -16,4 +16,8 @@
     <string name="wtf_error">Произошла непредвиденная ошибка</string>
     <string name="remove">Удалить</string>
     <string name="clear">Очистить</string>
+    <string name="swap">Поменять</string>
+    <string name="fullscreen">Увеличить</string>
+    <string name="closeFullscreen">Уменьшить</string>
+    <string name="loading">Загрузка</string>
 </resources>

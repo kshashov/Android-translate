@@ -24,6 +24,7 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> implements Histo
     private OrderedRealmCollection<Translate> all;
     private OrderedRealmCollection<Translate> favs;
     private Parcelable rvState;
+    private String searchText = "";
 
     public HistoryPresenter() {
         TranslateApp.getAppComponent().inject(this);
@@ -40,7 +41,7 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> implements Histo
         super.onFirstViewAttach();
         //init view state
         getViewState().showContent(true, all);
-        getViewState().search("");
+        getViewState().search(searchText);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> implements Histo
 
     public void onChangeTab(boolean isAll) {
         getViewState().showContent(isAll, isAll ? all : favs);
+        getViewState().search(searchText);
     }
 
     @Override
@@ -65,7 +67,8 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> implements Histo
     }
 
     public void onChangeSearchText(String newText) {
-        getViewState().search(newText);
+        searchText = newText;
+        getViewState().search(searchText);
     }
 
     public void onDeleteHistory() {

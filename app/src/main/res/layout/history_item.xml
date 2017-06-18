@@ -3,36 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/paddingSmall"
+    android:paddingTop="@dimen/paddingBig"
     android:background="@color/bgHistoryItem">
 
     <com.github.ivbaranov.mfb.MaterialFavoriteButton
         android:id="@+id/translate_favorite"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         app:mfb_animate_favorite="true"
         app:mfb_animate_unfavorite="false"
-        app:mfb_padding="12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"/>
+        android:layout_margin="@dimen/paddingNormal"
+        app:mfb_type="star"
+        app:mfb_color="black"
+        app:mfb_padding="0"
+        app:mfb_size="24"/>
 
     <TextView
         android:id="@+id/tv_lang_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:layout_alignParentRight="true"
-        android:textSize="@dimen/baseTextSize"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/baseTextSizeSmall"
         android:textAllCaps="true"
         android:textColor="@color/textCaption"
-        android:layout_margin="@dimen/paddingNormal"
+        android:layout_margin="@dimen/paddingBig"
         android:layout_centerVertical="true"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/translate_favorite"
-        android:layout_toLeftOf="@id/tv_lang_code"
+        android:layout_toEndOf="@+id/translate_favorite"
+        android:layout_toStartOf="@id/tv_lang_code"
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
@@ -42,7 +46,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="@dimen/baseTextSizeBig"
+            android:textSize="@dimen/baseTextSize"
             android:textColor="@color/textBase"/>
 
         <TextView
@@ -51,7 +55,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="@dimen/baseTextSizeBig"
+            android:textSize="@dimen/baseTextSize"
             android:textColor="@color/textCaption"/>
     </LinearLayout>
 

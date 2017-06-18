@@ -1,66 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
-
-    <!--<LinearLayout
-        android:id="@+id/ll_no_data"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data_available"
-            android:textSize="@dimen/baseTextSize"/>
-
-        <Button
-            android:id="@+id/btn_reload"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reload"
-            android:textSize="@dimen/baseTextSize"/>
-    </LinearLayout>
-
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
 
     <RelativeLayout
-        android:id="@+id/rl_translate_container"
+        android:id="@+id/rl_translate_fullscreen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bgTranslatedFullscreen">
 
-        <LinearLayout
-            android:id="@+id/ll_no_translate"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:layout_toRightOf="@+id/ll_input"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_data_available"
-                android:textSize="@dimen/baseTextSize"/>
-
-            <Button
-                android:id="@+id/btn_reload_translate"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reload"
-                android:textSize="@dimen/baseTextSize"/>
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_back_fullscreen"
+            android:layout_margin="@dimen/paddingNormal"
+            android:padding="@dimen/paddingNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:contentDescription="@string/closeFullscreen"
+            android:src="@mipmap/ic_clear_black_18dp"/>
 
         <com.lb.auto_fit_textview.AutoResizeTextView
             android:hint=""
-            android:id="@+id/tv_output"
+            android:id="@+id/tv_output_fullscreen"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_below="@+id/btn_back_fullscreen"
             android:textColor="@color/textTranslated"
             android:background="@color/bgOutputPanel"
             android:gravity="center"
@@ -68,41 +36,129 @@
             android:fontFamily="@string/font_family_light"
             android:singleLine="false"
             android:padding="@dimen/paddingNormal"
-            android:text=""
-            android:layout_toRightOf="@+id/ll_input"
+            android:text=":)"
             android:textIsSelectable="true"
             android:textSize="@dimen/translateTextSizeBig"/>
+    </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/pb_output"
-            android:layout_width="wrap_content"
-            android:indeterminate="true"
-            android:layout_alignTop="@+id/tv_output"
-            android:layout_alignRight="@+id/tv_output"
-            android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/rl_translate_screen"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/bgTranslateFragment">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_toEndOf="@+id/ll_input">
+
+            <RelativeLayout
+                android:id="@+id/rl_translate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_translated_actions"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/baseTextSizeBig"
+                    android:layout_alignParentBottom="true">
+
+                    <com.github.ivbaranov.mfb.MaterialFavoriteButton
+                        android:id="@+id/translate_favorite"
+                        app:mfb_animate_favorite="true"
+                        app:mfb_animate_unfavorite="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:mfb_type="star"
+                        app:mfb_color="black"
+                        app:mfb_padding="0"
+                        app:mfb_size="24"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_fullscreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/fullscreen"
+                        android:background="@null"
+                        android:src="@mipmap/ic_fullscreen_24"
+                        android:layout_marginStart="@dimen/paddingBig"/>
+                </LinearLayout>
+
+                <com.lb.auto_fit_textview.AutoResizeTextView
+                    android:hint=""
+                    android:id="@+id/tv_output"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_above="@+id/ll_translated_actions"
+                    android:textColor="@color/textTranslated"
+                    android:background="@color/bgOutputPanel"
+                    android:gravity="center"
+                    android:scrollbars="vertical"
+                    android:fontFamily="@string/font_family_light"
+                    android:singleLine="false"
+                    android:padding="@dimen/paddingNormal"
+                    android:text=":)"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/translateTextSizeBig"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_loading"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:indeterminate="true"
+                    android:layout_height="wrap_content"/>
+
+                <com.tomer.fadingtextview.FadingTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:texts="@array/loading"
+                    android:textSize="@dimen/baseTextSizeBig"
+                    android:textColor="@color/black"
+                    app:timeout="500"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/no_data"/>
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/ll_input"
-            android:layout_alignParentLeft="true"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/baseTextSizeBig"
+            android:layout_marginStart="@dimen/baseTextSizeBig"
+            android:layout_alignParentStart="true"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="@dimen/paddingNormal"
-            android:padding="@dimen/paddingSmall"
-            android:background="@color/bgInputPanel">
+            android:background="@color/bgInputPanel"
+            android:gravity="center_horizontal">
 
             <LinearLayout
                 android:id="@+id/language_panel"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/paddingNormal"
+                android:paddingTop="@dimen/paddingNormal"
                 android:gravity="center">
 
-                <Spinner
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/sp_lang_input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
+                    android:dropDownWidth="wrap_content"
+                    android:spinnerMode="dialog"
                     android:gravity="center"/>
 
                 <ImageButton
@@ -110,66 +166,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/swap"
                     android:background="@null"
                     android:src="@mipmap/ic_swap_horiz_black_24dp"/>
 
-                <Spinner
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/sp_lang_output"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
+                    android:spinnerMode="dialog"
                     android:gravity="center"/>
-
-                <com.github.ivbaranov.mfb.MaterialFavoriteButton
-                    android:id="@+id/translate_favorite"
-                    app:mfb_animate_favorite="true"
-                    app:mfb_animate_unfavorite="false"
-                    app:mfb_padding="10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/input_panel"
+            <EditText
+                android:id="@+id/et_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <EditText
-                    android:id="@+id/et_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:inputType="text"
-                    android:imeOptions="actionDone"
-                    android:text=""
-                    android:textSize="@dimen/inputTextSize"
-                    android:padding="@dimen/paddingSmall"
-                    android:hint="@string/hitInput"
-                    android:scrollbars="vertical"
-                    android:textColor="@color/textInput"
-                    android:background="@drawable/border_shape"/>
-
-                <ImageView
-                    android:id="@+id/img_clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:padding="2dp"
-                    android:src="@mipmap/ic_clear_black_18dp"/>
-
-            </RelativeLayout>
+                android:gravity="top"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:minLines="4"
+                android:text=""
+                android:textSize="@dimen/inputTextSize"
+                android:padding="@dimen/paddingNormal"
+                android:layout_margin="@dimen/paddingBig"
+                android:hint="@string/hitInput"
+                android:scrollbars="vertical"
+                android:textColor="@color/textInput"
+                android:background="@android:color/transparent"/>
         </LinearLayout>
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/pb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerInParent="true"/>-->
-</RelativeLayout>
+</FrameLayout>

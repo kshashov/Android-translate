@@ -13,7 +13,6 @@
     <string name="all">All</string>
     <string name="favorites">Favorites</string>
     <string name="deleteAll">Are you sure you want to clear this history?</string>
-    <!--<string name="deleteFav">Are you sure you want to clear your favorites?</string>-->
     <string name="wtf_error">An unexpected error occurred</string>
     <string name="remove">Remove</string>
     <string name="clear">Сlear</string>
