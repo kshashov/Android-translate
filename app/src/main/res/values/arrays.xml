@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="loading">
+        <item>Loading</item>
+        <item>Загрузка</item>
+        <item>Сaricamento</item>
+        <item>로드</item>
+        <item>Сhargement</item>
+    </string-array>
+</resources>

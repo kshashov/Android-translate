@@ -14,6 +14,7 @@ import shashov.translate.dao.Language;
 import shashov.translate.di.modules.NetworkModule;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,7 @@ public class LangsModel {
                             for (Map.Entry<String, String> entry : data.langsMap.entrySet()) {
                                 result.add(new Language(entry.getKey(), entry.getValue()));
                             }
+                            Collections.sort(result, (Language left, Language right) -> left.getTitle().compareToIgnoreCase(right.getTitle()));
                             langsCached.clear();
                             langsCached.addAll(result);
                             onSuccess.call(langsCached);

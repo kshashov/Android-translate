@@ -1,8 +1,8 @@
 <resources>
-    <dimen name="baseTextSize">14sp</dimen>
-    <dimen name="baseTextSizeBig">18sp</dimen>
+    <dimen name="baseTextSize">18sp</dimen>
+    <dimen name="baseTextSizeBig">28sp</dimen>
     <dimen name="translateTextSizeBig">200sp</dimen>
-    <dimen name="inputTextSize">16sp</dimen>
+    <dimen name="inputTextSize">48sp</dimen>
 
     <dimen name="paddingSmall">5dp</dimen>
     <dimen name="paddingNormal">10dp</dimen>

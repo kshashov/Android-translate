@@ -4,21 +4,8 @@
                 android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bgApp"
                 android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/container_fragment"
-        android:layout_above="@+id/horizontal_line"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"/>
-
-    <View
-        android:id="@+id/horizontal_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/bottom_navigation"
-        android:background="@color/borderShapeColor"></View>
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -26,8 +13,13 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bgBottomMenu"
         app:menu="@menu/menu_main"
-        app:elevation="0dp"
         style="@style/Widget.Design.BottomNavigationView"
         app:itemIconTint="@drawable/nav_item_color_state"
         app:itemTextColor="@drawable/nav_item_color_state"/>
+
+    <FrameLayout
+        android:id="@+id/container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/bottom_navigation"/>
 </RelativeLayout>

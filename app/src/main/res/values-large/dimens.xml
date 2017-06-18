@@ -2,7 +2,7 @@
     <dimen name="baseTextSize">16sp</dimen>
     <dimen name="baseTextSizeBig">20sp</dimen>
     <dimen name="translateTextSizeBig">200sp</dimen>
-    <dimen name="inputTextSize">20sp</dimen>
+    <dimen name="inputTextSize">48sp</dimen>
 
     <dimen name="paddingSmall">7dp</dimen>
     <dimen name="paddingNormal">13dp</dimen>

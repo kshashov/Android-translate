@@ -16,4 +16,9 @@
     <!--<string name="deleteFav">Are you sure you want to clear your favorites?</string>-->
     <string name="wtf_error">An unexpected error occurred</string>
     <string name="remove">Remove</string>
+    <string name="clear">Сlear</string>
+    <string name="swap">Swap</string>
+    <string name="fullscreen">Fullscreen</string>
+    <string name="closeFullscreen">Close fullscreen</string>
+    <string name="loading">Loading</string>
 </resources>

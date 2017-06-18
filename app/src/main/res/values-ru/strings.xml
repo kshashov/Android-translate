@@ -15,4 +15,5 @@
     <string name="deleteAll">Удалить историю переводов?</string>
     <string name="wtf_error">Произошла непредвиденная ошибка</string>
     <string name="remove">Удалить</string>
+    <string name="clear">Очистить</string>
 </resources>

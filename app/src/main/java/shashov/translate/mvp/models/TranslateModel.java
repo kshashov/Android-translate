@@ -62,7 +62,7 @@ public class TranslateModel {
 
                                 onSuccess.call(historyModel.saveTranslate(translate));
                             }, (throwable) -> {
-                                Log.d(TAG, "onError() called with: " + "e = [" + throwable + "]");
+                                Log.d(TAG, "onError() called with: " + translate.getFromLang() + "-" + translate.getToLang() + " e = [" + throwable + "]");
                                 onError.call(resources.getString(R.string.wtf_error));
                             }
                     );

@@ -1,5 +1,6 @@
 package shashov.translate.mvp.presenters;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import com.arellomobile.mvp.InjectViewState;
 import com.squareup.otto.Bus;
@@ -8,6 +9,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import shashov.translate.R;
 import shashov.translate.TranslateApp;
 import shashov.translate.dao.Translate;
 import shashov.translate.mvp.models.HistoryModel;
@@ -29,6 +31,8 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
     HistoryModel historyModel;
     @Inject
     Bus eventBus;
+    @Inject
+    Resources resources;
 
     private Translate currentTranslate;
     private Subscription subscriptionChangeInput;
@@ -41,6 +45,8 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
         currentTranslate = historyModel.getLast();
         if (currentTranslate == null) {
             currentTranslate = new Translate();
+            currentTranslate.setFromLang(resources.getString(R.string.lang_code));
+            currentTranslate.setToLang(resources.getString(R.string.lang_code));
         }
     }
 
@@ -140,10 +146,6 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
         onChangeInput(input, true);
     }
 
-    public void onClearInput() {
-        onChangeInput("", false);
-    }
-
     private void onChangeInput(String input, boolean isDelay) {
         if (currentTranslate.getInput().equals(input)) {
             return;
@@ -166,6 +168,14 @@ public class TranslatePresenter extends BasePresenter<TranslateView> {
                     .subscribe(inputText -> loadData());
             unsubscribeOnDestroy(subscriptionChangeInput);
         }
+    }
+
+    public void onOpenTranslateFullScreen() {
+        getViewState().showTranslateFullScreen(currentTranslate);
+    }
+
+    public void onCloseTranslateFullScreen() {
+        getViewState().showTranslate(currentTranslate);
     }
 
     static class OpenTranslateEvent {

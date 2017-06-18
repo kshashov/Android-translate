@@ -5,6 +5,7 @@
         android:id="@+id/action_translate"
         android:enabled="true"
         android:icon="@mipmap/ic_translate_black_24dp"
+
         android:title="@string/translate"
         app:showAsAction="ifRoom"/>
 

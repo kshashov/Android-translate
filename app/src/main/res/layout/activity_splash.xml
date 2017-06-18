@@ -1,29 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/bgApp">
 
-    <LinearLayout
-        android:id="@+id/ll_no_data"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data_available"
-            android:textSize="@dimen/baseTextSize"/>
-
-        <Button
-            android:id="@+id/btn_reload"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reload"
-            android:textSize="@dimen/baseTextSize"/>
-    </LinearLayout>
+    <include layout="@layout/no_data"/>
 
     <LinearLayout
         android:id="@+id/ll_loading"

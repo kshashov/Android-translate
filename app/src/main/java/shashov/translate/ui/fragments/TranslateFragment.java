@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,18 @@ import java.util.List;
 public class TranslateFragment extends MvpAppCompatFragment implements TranslateView, TextWatcher {
     public static final String TAG = "TranslateFragment";
 
-    @BindView(R.id.pb_output)
-    ProgressBar pbOutput;
-    @BindView(R.id.ll_no_translate)
+    @BindView(R.id.ll_no_data)
     LinearLayout llNoTranslate;
+    @BindView(R.id.ll_loading)
+    LinearLayout llLoading;
+    @BindView(R.id.ll_translated_actions)
+    LinearLayout llTranslateActions;
+    @BindView(R.id.rl_translate)
+    RelativeLayout rlTranslate;
+    @BindView(R.id.rl_translate_fullscreen)
+    RelativeLayout rlTranslateFullScreen;
+    @BindView(R.id.rl_translate_screen)
+    RelativeLayout rlTranslateScreen;
 
     //translate
     @BindView(R.id.sp_lang_input)
@@ -40,13 +49,13 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     @BindView(R.id.sp_lang_output)
     Spinner spOutputLang;
     @BindView(R.id.tv_output)
-    AutoResizeTextView tv_outputText;
+    AutoResizeTextView tvOutputText;
     @BindView(R.id.et_input)
     EditText etInputText;
     @BindView(R.id.translate_favorite)
     MaterialFavoriteButton mfbFav;
-    @BindView(R.id.img_clear)
-    ImageView imgClear;
+    @BindView(R.id.tv_output_fullscreen)
+    AutoResizeTextView tvOutputTextFullScreen;
 
     @InjectPresenter
     TranslatePresenter translatePresenter;
@@ -58,36 +67,45 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         View view = inflater.inflate(R.layout.fragment_translate, container, false);
         unbinder = ButterKnife.bind(this, view);
         initInputField();
-        tv_outputText.setMinTextSize(etInputText.getTextSize());
+        tvOutputText.setMinTextSize(etInputText.getTextSize());
+        tvOutputTextFullScreen.setMinTextSize(etInputText.getTextSize());
         return view;
     }
 
     @Override
     public void showLoading() {
-        pbOutput.setVisibility(View.VISIBLE);
-        mfbFav.setVisibility(View.INVISIBLE);
+        rlTranslateScreen.setVisibility(View.VISIBLE);
         llNoTranslate.setVisibility(View.INVISIBLE);
-        tv_outputText.setVisibility(View.VISIBLE);
-        tv_outputText.setTextColor(getResources().getColor(R.color.textTranslatedLoading));
+        rlTranslate.setVisibility(View.INVISIBLE);
+        rlTranslateFullScreen.setVisibility(View.INVISIBLE);
+        llLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showNoData() {
-        pbOutput.setVisibility(View.INVISIBLE);
-        mfbFav.setVisibility(View.INVISIBLE);
+        rlTranslateScreen.setVisibility(View.VISIBLE);
         llNoTranslate.setVisibility(View.VISIBLE);
-        tv_outputText.setVisibility(View.INVISIBLE);
+        rlTranslate.setVisibility(View.INVISIBLE);
+        llLoading.setVisibility(View.INVISIBLE);
+        rlTranslateFullScreen.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showTranslate(Translate translate) {
-        pbOutput.setVisibility(View.INVISIBLE);
-        mfbFav.setVisibility(View.VISIBLE);
+        rlTranslateScreen.setVisibility(View.VISIBLE);
         llNoTranslate.setVisibility(View.INVISIBLE);
-        tv_outputText.setVisibility(View.VISIBLE);
-        tv_outputText.setTextColor(getResources().getColor(R.color.textTranslated));
+        rlTranslate.setVisibility(View.VISIBLE);
+        llLoading.setVisibility(View.INVISIBLE);
+        rlTranslateFullScreen.setVisibility(View.INVISIBLE);
 
         setupTranslate(translate);
+    }
+
+    @Override
+    public void showTranslateFullScreen(Translate translate) {
+        rlTranslateScreen.setVisibility(View.INVISIBLE);
+        rlTranslateFullScreen.setVisibility(View.VISIBLE);
+        tvOutputTextFullScreen.setText(translate.getOutput());
     }
 
     @Override
@@ -104,7 +122,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         mfbFav.toggleFavorite();
     }
 
-    @OnClick(R.id.btn_reload_translate)
+    @OnClick(R.id.btn_reload)
     void onClickReloadTranslate() {
         translatePresenter.onReloadTranslate();
     }
@@ -118,26 +136,31 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         translatePresenter.onSwapLangs();
     }
 
-    @OnClick(R.id.img_clear)
-    void onClickClearInput() {
-        translatePresenter.onClearInput();
+    @OnClick(R.id.btn_fullscreen)
+    void onOpenTranslateFullScreen() {
+        translatePresenter.onOpenTranslateFullScreen();
+    }
+
+    @OnClick(R.id.btn_back_fullscreen)
+    void onCloseTranslateFullScreen() {
+        translatePresenter.onCloseTranslateFullScreen();
     }
 
     private void initInputField() {
         etInputText.setHorizontallyScrolling(false);
-        etInputText.setLines(4);
-        etInputText.setPadding(etInputText.getPaddingLeft(), etInputText.getPaddingTop(), imgClear.getDrawable().getIntrinsicWidth(), etInputText.getPaddingBottom());
+        etInputText.setMaxLines(4);
     }
 
     private void setupTranslate(@NonNull Translate translate) {
-        tv_outputText.setText(translate.getOutput());
+        tvOutputText.setText(translate.getOutput());
         mfbFav.setFavorite(translate.isFavorite(), false);
-        etInputText.removeTextChangedListener(this);
-        etInputText.setText(translate.getInput());
-        etInputText.addTextChangedListener(this);
-
-        mfbFav.setVisibility(translate.getOutput().isEmpty() ? View.INVISIBLE : View.VISIBLE);
-        imgClear.setVisibility(translate.getInput().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        llTranslateActions.setVisibility(translate.getOutput().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        if (!translate.getInput().equals(etInputText.getText().toString().trim())) {
+            etInputText.removeTextChangedListener(this);
+            etInputText.setText(translate.getInput());
+            etInputText.addTextChangedListener(this);
+            Log.d(TAG, "input = [" + translate.getInput() + "," + etInputText.getText().toString().trim() + "]");
+        }
 
         //langs
         setupLang(true, translate.getFromLang());
@@ -174,7 +197,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
 
     @Override
     public void afterTextChanged(Editable s) {
-        translatePresenter.onChangeInput(s.toString());
+        translatePresenter.onChangeInput(s.toString().trim());
     }
 
     @Override

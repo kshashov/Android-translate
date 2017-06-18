@@ -9,12 +9,14 @@ import shashov.translate.dao.Translate;
 
 import java.util.List;
 
-@StateStrategyType(AddToEndSingleStrategy.class)
+@StateStrategyType(SkipStrategy.class)
 public interface TranslateView extends MvpView {
     void showLoading();
     void showNoData();
-
-    @StateStrategyType(SkipStrategy.class)
     void showTranslate(Translate translate);
+
+    void showTranslateFullScreen(Translate translate);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void populateLangs(List<Language> langs);
 }
