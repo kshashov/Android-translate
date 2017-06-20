@@ -15,7 +15,7 @@ android {
         incremental = false
     }
     defaultConfig {
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId "shashov.translate"
         minSdkVersion 17
         targetSdkVersion 25
@@ -108,6 +108,7 @@ dependencies {
     //test
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:$mockito"
-    androidTestCompile "org.mockito:mockito-android:$mockito"
-    androidTestCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.3.2"
+//    androidTestCompile 'junit:junit:4.12'
+//    androidTestCompile "org.mockito:mockito-android:$mockito"
 }

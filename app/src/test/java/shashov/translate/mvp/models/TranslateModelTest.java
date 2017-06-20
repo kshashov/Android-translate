@@ -1,4 +1,4 @@
-package shashov.translate.models;
+package shashov.translate.mvp.models;
 
 import android.content.res.Resources;
 import org.junit.After;
@@ -12,8 +12,6 @@ import shashov.translate.RxTestUtils;
 import shashov.translate.common.YandexAPI;
 import shashov.translate.dao.Translate;
 import shashov.translate.di.modules.NetworkModule;
-import shashov.translate.mvp.models.HistoryModel;
-import shashov.translate.mvp.models.TranslateModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by kirill on 6/20/17.
- */
 public class TranslateModelTest {
     private TranslateModel translateModel;
     @Mock

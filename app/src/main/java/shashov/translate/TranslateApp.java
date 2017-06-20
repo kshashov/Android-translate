@@ -1,6 +1,8 @@
 package shashov.translate;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -56,6 +58,11 @@ public class TranslateApp extends Application {
      */
     public static AppComponent getAppComponent() {
         return appComponent;
+    }
+
+    @VisibleForTesting
+    public static void setAppComponent(@NonNull AppComponent appComponent) {
+        TranslateApp.appComponent = appComponent;
     }
 
 }

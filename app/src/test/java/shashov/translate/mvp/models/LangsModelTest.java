@@ -1,4 +1,4 @@
-package shashov.translate.models;
+package shashov.translate.mvp.models;
 
 import android.content.res.Resources;
 import org.junit.After;
@@ -15,7 +15,6 @@ import shashov.translate.RxTestUtils;
 import shashov.translate.common.YandexAPI;
 import shashov.translate.dao.Language;
 import shashov.translate.di.modules.NetworkModule;
-import shashov.translate.mvp.models.LangsModel;
 
 import java.util.HashMap;
 import java.util.List;
