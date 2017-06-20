@@ -3,46 +3,37 @@
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/envoy93/Android-translate/master/LICENSE)
 
 # Android-translate
-Примитивный клиент API Яндекс.Переводчика под Android. Изначально был написан для [Школа мобильной разработки](https://academy.yandex.ru/events/mobdev/msk-2017/)
+Примитивный клиент API Яндекс.Переводчика под Android.
 
-
-<img src="https://github.com/envoy93/Android-translate/blob/master/img/1.png" width="250">
-
-### Особенности функционала
-* При очистке истории переводы удаляются и из избранного
-* Список доступных языков скачивается при каждом запуске приложения. Вдруг поменялся, а чекнуть, были ли обновления, способа не нашел.
-* Перевод осуществляется через 0.5 секунд после ввода, чтобы снизить количество запросов пока юзер набирает текст
 ### Внешние зависимости
 * Интернет - Retrofit
 * База данных - Realm
+* Архитектура
+    - `Moxy` - реализация MVP. Используется на всех экранах 
+    - `Dagger 2` - DI инъекции вспомогательных сущностей (`Realm`, `Otto`), а также моделей в презентерах 
+    - `Otto` - взаимодействие между презентерами
+    - `Cicerone` - навигация между фрагментами
 * UI  
-    - AutoFitTextView - тектсовое поле для отображения перевода с динамическим размером шрифта 
-    - RealmSearchview + RealmSearchAdapter - для списка переводов с поиском
-    - MaterialFavoriteButton - кнопка-переключатель избранного
+    - `AutoFitTextView` - тектсовое поле для отображения перевода с динамическим размером шрифта 
+    - `RealmSearchview` + `RealmSearchAdapter` - для списка переводов с поиском
+    - `MaterialFavoriteButton` - кнопка-переключатель избранного
+    - `SpinFit` - индикатор загрузки для сплеш-экрана
+    - `FadingTextView` - меняющийся текст для отображения загрузки перевода
 * Прочее
-    - RxJava - использовался в связке с Retrofit и для самодельного EventBus
-    - ButterKnife
-    - DI - Dagger 2
-    
-### Что хорошо
-* Базовый функционал реализован
-* Адекватно масштабируется под базовые размеры экранов. Есть горизонтальный лайаут для планшетов
-* Адекватно отрабатывает поворот экрана
-* Отсутствие интернета и прочие ошибки при добычи данных адекватно отображаются с кнопкой "обновить"
-
-### Что плохо
-* Dagger использовал первый раз Как итог - куча синглтонов
-* Применил MVP (хорошо) в форме своего велосипеда (плохо). Изначально начал делать свою реализацию чтобы ощутить все подводные камни. Потом хотел заюзать готовую библиотеку. Увы, в итоге время пришлось посвятить магистерской диссертации
-    - Связка презентер-вью для окна перевода вышла слишком "спагетти"
-* Не написал юнит тесты :((( 
-* Не прикрутил API словаря для различных вариантов перевода
+    - `RxJava` - все асинхронные операции, `Retrofit` вызовы
+    - `ButterKnife`
+    - `Retrolambda`
+* Тесты
+    - `Mockito`
+* Управление проектом
+    - `Travis CI`
+    - `Codecov`
 
 ### Скриншоты
-<img src="https://github.com/envoy93/Android-translate/blob/master/img/2.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/3.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/4.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/5.png" width="200">
+<img src="https://github.com/envoy93/Android-translate/blob/master/img/1.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/2.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/3.png" width="200"><img src="https://github.com/envoy93/Android-translate/blob/master/img/4.png" width="200">
 
 Планшет
 
-<img src="https://github.com/envoy93/Android-translate/blob/master/img/6.png" height="500">
-<img src="https://github.com/envoy93/Android-translate/blob/master/img/7.png" height="500">
+<img src="https://github.com/envoy93/Android-translate/blob/master/img/5.png" height="500">
 
 

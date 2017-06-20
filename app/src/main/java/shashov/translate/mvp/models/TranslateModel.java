@@ -77,5 +77,10 @@ public class TranslateModel {
         String code;
         @SerializedName("text")
         List<String> textList;
+
+        public TranslateResponse(String code, List<String> textList) {
+            this.code = code;
+            this.textList = textList;
+        }
     }
 }

@@ -22,8 +22,8 @@ public class LangsModel {
     private static final String TAG = LangsModel.class.getSimpleName();
     private final Resources resources;
     private final YandexAPI yandexAPI;
-    private List<Language> langsCached = new ArrayList<>();
     private final NetworkModule.NetworkManager networkManager;
+    private List<Language> langsCached = new ArrayList<>();
 
     public LangsModel(Resources resources, YandexAPI yandexAPI, NetworkModule.NetworkManager networkManager) {
         this.yandexAPI = yandexAPI;
@@ -74,7 +74,10 @@ public class LangsModel {
         return subscription;
     }
 
-    public class LangsResponse {
+    public static class LangsResponse {
+        public LangsResponse(Map<String, String> langsMap) {
+            this.langsMap = langsMap;
+        }
 
         @SerializedName("langs")
         public Map<String, String> langsMap;
