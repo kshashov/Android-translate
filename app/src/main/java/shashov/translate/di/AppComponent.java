@@ -24,12 +24,15 @@ public interface AppComponent {
     void inject(TranslateApp translateApp);
 
     void inject(MainPresenter mainPresenter);
+
     void inject(SplashPresenter splashPresenter);
 
     void inject(HistoryPresenter historyPresenter);
+
     void inject(TranslatePresenter translatePresenter);
 
     Realm realm();
+
     YandexAPI yandexApi();
 
     NetworkModule.NetworkManager networkManager();

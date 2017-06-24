@@ -6,9 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.robolectric.annotation.Config;
 import rx.functions.Action1;
 import shashov.translate.R;
@@ -23,6 +21,7 @@ import shashov.translate.mvp.views.TranslateView;
 import shashov.translate.test.TestComponent;
 import shashov.translate.test.TestComponentRule;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @Config(manifest = Config.NONE)
@@ -44,6 +43,8 @@ public class TranslatePresenterTest {
     HistoryModel historyModel;
     @Mock
     TranslateModel translateModel;
+    @Captor
+    ArgumentCaptor<Translate> tr;
 
     @Before
     public void setUp() {
@@ -57,7 +58,7 @@ public class TranslatePresenterTest {
     }
 
     @Test
-    public void showTranslateWhenFirstAttach() {
+    public void showTranslateWhenLoaded() {
         when(translateModel.translate(any(Translate.class), any(Action1.class), any(Action1.class))).
                 thenAnswer(invocation -> {
                     ((Action1<Translate>) invocation.getArgument(1)).call(TranslateModelTest.getTranslate());
@@ -78,9 +79,21 @@ public class TranslatePresenterTest {
                     return null;
                 });
 
-        presenter.attachView(translateView);
-        verify(translateView, times(2)).showLoading();
-        verify(translateView, times(2)).showNoData();
+        presenter.onReloadTranslate();
+        verify(translateView).showLoading();
+        verify(translateView).showNoData();
+    }
+
+    @Test
+    public void updateStateWhenOpenTranslate() {
+        //open new translate
+        Translate translate = new Translate();
+        translate.setInput("test");
+        presenter.openTranslate(new TranslatePresenter.OpenTranslateEvent(translate));
+        presenter.onReloadTranslate();
+
+        verify(translateModel).translate(tr.capture(), any(), any());
+        assertEquals("test", tr.getValue().getInput());
     }
 
     @Test
@@ -96,19 +109,41 @@ public class TranslatePresenterTest {
     }
 
     @Test
-    public void showTranslateWhenDataChanged() {
-        when(translateModel.translate(any(), any(Action1.class), any(Action1.class))).
-                thenAnswer(invocation -> {
-                    ((Action1<Translate>) invocation.getArgument(1)).call(TranslateModelTest.getTranslate());
-                    return null;
-                });
+    public void updateWhenFavoriteChanged() {
+        presenter.onChangeFavorite();
+        verify(historyModel).changeFavorite(any(Translate.class));
+    }
 
+    @Test
+    public void loadTranslateWhenLangsChanged() {
+        //change params
         presenter.onChangeLang(true, "en");
+        presenter.onChangeLang(false, "ru");
         presenter.onSwapLangs();
-        presenter.onReloadTranslate();
 
-        verify(translateView, times(3)).showLoading();
-        verify(translateView, times(3)).showTranslate(any());
+        verify(translateModel, times(3)).translate(any(), any(), any());
+    }
+
+    @Test
+    public void loadTranslateWhenReload() {
+        presenter.onReloadTranslate();
+        verify(translateModel).translate(any(), any(), any());
+    }
+
+    @Test
+    public void translateModelNoInvocationsWhenEmptyOrEqualInput() {
+        //setup translate
+        Translate translate = TranslateModelTest.getTranslate();
+        translate.setInput("1");
+        presenter.openTranslate(new TranslatePresenter.OpenTranslateEvent(translate));
+        //load emptyOrEqual translate
+        presenter.onChangeInput("1");
+        presenter.onChangeInput("");
+        verify(translateModel, never()).translate(any(), any(), any());
+        verify(translateView).showTranslate(any(Translate.class));
+
+        //restore translate state
+        presenter.onChangeInput("1");
     }
 
     @After

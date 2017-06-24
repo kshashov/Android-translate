@@ -62,13 +62,13 @@ public class HistoryPresenterTest {
     @Test
     public void searchWhenTextChanged() {
         presenter.onChangeSearchText("text");
-        verify(historyView).search(contains("text"));
+        verify(historyView).search(eq("text"));
     }
 
     @Test
     public void showDataWhenTabChanged() {
-        presenter.onChangeTab(true);
-        verify(historyView).showContent(anyBoolean(), any());
+        presenter.onChangeTab(false);
+        verify(historyView).showContent(eq(false), any());
         verify(historyView).search(anyString());
     }
 
@@ -84,6 +84,12 @@ public class HistoryPresenterTest {
         presenter.onPositiveCloseDeleteDialog(true);
         presenter.onPositiveCloseDeleteDialog(false);
         verify(historyView, times(3)).closeDeleteDialog();
+    }
+
+    @Test
+    public void updateWhenFavoriteChanged() {
+        presenter.onChangeFavorite(new Translate());
+        verify(historyModel).changeFavorite(any(Translate.class));
     }
 
     @After
