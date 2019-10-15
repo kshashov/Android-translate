@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/envoy93/Android-translate.svg?branch=master)](https://travis-ci.org/envoy93/Android-translate)
-[![codecov](https://codecov.io/gh/envoy93/Android-translate/branch/master/graph/badge.svg)](https://codecov.io/gh/envoy93/Android-translate)
+[![Build Status](https://travis-ci.org/kshashov/Android-translate.svg?branch=master)](https://travis-ci.org/kshashov/Android-translate)
+[![codecov](https://codecov.io/gh/kshashov/Android-translate/branch/master/graph/badge.svg)](https://codecov.io/gh/kshashov/Android-translate)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/envoy93/Android-translate/master/LICENSE)
 
 # Android-translate
